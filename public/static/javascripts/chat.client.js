@@ -25,7 +25,7 @@ var socket;
 
 function joinRoom(name){
     $('#userName').val(name);
-    socket = io('http://115.29.47.23:3002');
+    socket = io('http://192.168.1.61:3002');//192.168.1.61 115.29.47.23
     socket.emit('join', {username:name});
     socket.on('broadcast_connected', function(msg){//监听加入事件
     });
@@ -39,10 +39,10 @@ function joinRoom(name){
                     var cameraHtml= '';
                     if(userList[i].socketId != socket.io.engine.id){
                         cameraHtml =  '<a href="javascript:sendVideoRequest(\''+socket.io.engine.id+'\',\''+userList[i].socketId+'\',\''+userList[i].userName+'\');" class="pull-right">' +
-                            '<img alt="" src="/images/camera.png" style="width: 16px;height: 16px;margin-top: 4px;" />';
+                            '<img alt="" src="/static/images/camera.png" style="width: 16px;height: 16px;margin-top: 4px;" />';
                     }
                     list_content.append('<li id="user-'+userList[i].socketId+'" class="online">' +
-                        '<a href="#" class="pull-left"><img alt="" src="/images/av2.jpg" />' +
+                        '<a href="#" class="pull-left"><img alt="" src="/static/images/av2.jpg" />' +
                         ' <span>'+userList[i].userName+'</span></a>' +cameraHtml+
                         '</a>' +
                         '<div class="clearfix"></div></li>');
@@ -53,10 +53,10 @@ function joinRoom(name){
 
     });
     socket.on('broadcast_say', function(msg){//监听聊天事件
-        add_message(msg.username+':','/images/av2.jpg',msg.text,true);
+        add_message(msg.username+':','/static/images/av2.jpg',msg.text,true);
     });
     socket.on('broadcast_blob', function(msg){//监听聊天事件
-        add_message(msg.username+':','/images/av2.jpg','<img src="' + msg.blob_message + '"/>',true);
+        add_message(msg.username+':','/static/images/av2.jpg','<img src="' + msg.blob_message + '"/>',true);
     });
     socket.on('broadcast_quit', function(msg){//监听聊天事件
         if(msg){
@@ -65,7 +65,7 @@ function joinRoom(name){
     });
     socket.on('video_invite', function(msg){//监听聊天事件
         if(msg){
-            add_message(msg.fromUserName+'向你发来视频邀请','/images/av2.jpg',
+            add_message(msg.fromUserName+'向你发来视频邀请','/static/images/av2.jpg',
                     '<a class="agree_a" data-needagreesocketId="'+msg.fromSocketId+'"  data-whoagreesocketId="'+msg.toSocketId+'"  href="javascript:;">接受</a>',true);
         }
     });
@@ -94,7 +94,7 @@ $('.chat-message button').click(function(){
     var input = $('.chat-message textarea');
     if(input.val() != ''){
         socket.emit('say', {text:input.val()});
-        add_message('你:','/images/av1.jpg',input.val(),true);
+        add_message('你:','/static/images/av1.jpg',input.val(),true);
     } else {
         $('.input-box').addClass('has-error');
     }
@@ -109,7 +109,7 @@ message_box_input.keypress(function(e){
     if(e.which == 13) {
         if($(this).val() != ''){
             socket.emit('say', {text:$(this).val()});
-            add_message('你:','/images/av1.jpg',$(this).val(),true);
+            add_message('你:','/static/images/av1.jpg',$(this).val(),true);
         } else {
             $('.input-box').addClass('has-error');
         }
@@ -163,7 +163,7 @@ function pasteClob(evt){
             reader.onload=function(){
                 var sHtml='<img class="msg-send" src="'+event.target.result+'">';//result应该是base64编码后的图片
 //                document.getElementById('dd').innerHTML += sHtml;
-                add_message('你:','/images/av1.jpg',sHtml,true);
+                add_message('你:','/static/images/av1.jpg',sHtml,true);
                 socket.emit('send_blob', event.target.result);
             }
             reader.readAsDataURL(blob);//用fileReader读取二进制图片，完成后会调用上面定义的回调函数
