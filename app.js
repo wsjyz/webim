@@ -59,8 +59,8 @@ app.use(function(err, req, res, next) {
     });
 });
 
-http.listen(3000, function(){
-    console.log('socket server listening on :3000');
+http.listen(3002, function(){
+    console.log('socket server listening on :3002');
 });
 
 module.exports = app;
