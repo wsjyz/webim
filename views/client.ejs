@@ -1,0 +1,63 @@
+<html>
+<head>
+    <style>
+        #remoteVideos video {
+            height: 150px;
+        }
+        #localVideo {
+            height: 150px;
+        }
+    </style>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/jquery-1.10.2.min.js"></script>
+<script>
+    var socket = io('http://192.168.1.61:3000');
+    socket.on('broadcast_connected', function(msg){//监听加入事件
+        $('#msgshow').append(msg.socketId+'上线了<br>');
+    });
+    socket.on('broadcast_join', function(msg){//监听加入事件
+        $('#msgshow').append(msg+'<br>');
+    });
+    socket.on('broadcast_say', function(msg){//监听聊天事件
+        $('#msgshow').append(msg.username+'说:'+msg.text+'<br>');
+    });
+    socket.on('broadcast_quit', function(msg){//监听聊天事件
+        $('#msgshow').append(msg.username+'离开了！'+'<br>');
+    });
+    function joinRoom(){
+        var name = $('#username').val();
+        console.log(socket.id);
+        socket.emit('join', {username:name,socketId:socket.id});
+    }
+    function sendMessage(){
+        socket.emit('say', {text:$('#msgContent').val()});
+    }
+
+</script>
+<script src="/javascripts/latest.js"></script>
+<script>
+    var webrtc = new SimpleWebRTC({
+        // the id/element dom element that will hold "our" video
+        localVideoEl: 'localVideo',
+        // the id/element dom element that will hold remote videos
+        remoteVideosEl: 'remoteVideos',
+        // immediately ask for camera access
+        autoRequestMedia: true
+    });
+    webrtc.on('readyToCall', function () {
+        // you can name it anything
+        webrtc.joinRoom('your awesome room name');
+    });
+</script>
+</head>
+<body>
+<video id="localVideo"></video>
+<div id="remoteVideos"></div>
+<div id="msgshow" style="height: 300px;width: 500px; background-color: #C1C1C1"></div>
+<input type="text" id="msgContent" placeholder="输入要说的话"/>
+<input type="button" value="确定" onclick="javascript:sendMessage();"/>
+<input type="text" id="username" placeholder="输入自己的昵称"/>
+<input type="button" value="加入" onclick="javascript:joinRoom();"/>
+
+</body>
+</html>
