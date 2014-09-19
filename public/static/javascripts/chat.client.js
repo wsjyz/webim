@@ -25,7 +25,7 @@ var socket;
 
 function joinRoom(name){
     $('#userName').val(name);
-    socket = io('http://192.168.1.61:3002');//192.168.1.61 115.29.47.23
+    socket = io('http://115.29.47.23:3002');//192.168.1.61 115.29.47.23
     socket.emit('join', {username:name});
     socket.on('broadcast_connected', function(msg){//监听加入事件
     });
