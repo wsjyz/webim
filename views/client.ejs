@@ -11,7 +11,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="/javascripts/jquery-1.10.2.min.js"></script>
 <script>
-    var socket = io('http://192.168.1.61:3000');
+    var socket = io('http://115.29.47.23:3002');
     socket.on('broadcast_connected', function(msg){//监听加入事件
         $('#msgshow').append(msg.socketId+'上线了<br>');
     });
