@@ -8,8 +8,8 @@
             height: 150px;
         }
     </style>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/javascripts/jquery-1.10.2.min.js"></script>
+<script src="/static/javascripts/socket.io.js"></script>
+<script src="/static/javascripts/jquery-1.10.2.min.js"></script>
 <script>
     var socket = io('http://115.29.47.23:3002');
     socket.on('broadcast_connected', function(msg){//监听加入事件
@@ -34,7 +34,7 @@
     }
 
 </script>
-<script src="/javascripts/latest.js"></script>
+<script src="/static/javascripts/latest.js"></script>
 <script>
     var webrtc = new SimpleWebRTC({
         // the id/element dom element that will hold "our" video
