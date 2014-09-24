@@ -11,7 +11,7 @@
 <script src="/static/javascripts/socket.io.js"></script>
 <script src="/static/javascripts/jquery-1.10.2.min.js"></script>
 <script>
-    var socket = io('http://115.29.47.23:3002');
+    var socket = io('http://192.168.1.61:3002');
     socket.on('broadcast_connected', function(msg){//监听加入事件
         $('#msgshow').append(msg.socketId+'上线了<br>');
     });
@@ -34,21 +34,21 @@
     }
 
 </script>
-<script src="/static/javascripts/latest.js"></script>
-<script>
-    var webrtc = new SimpleWebRTC({
-        // the id/element dom element that will hold "our" video
-        localVideoEl: 'localVideo',
-        // the id/element dom element that will hold remote videos
-        remoteVideosEl: 'remoteVideos',
-        // immediately ask for camera access
-        autoRequestMedia: true
-    });
-    webrtc.on('readyToCall', function () {
-        // you can name it anything
-        webrtc.joinRoom('your awesome room name');
-    });
-</script>
+<!--<script src="/static/javascripts/latest.js"></script>-->
+<!--<script>-->
+    <!--var webrtc = new SimpleWebRTC({-->
+        <!--// the id/element dom element that will hold "our" video-->
+        <!--localVideoEl: 'localVideo',-->
+        <!--// the id/element dom element that will hold remote videos-->
+        <!--remoteVideosEl: 'remoteVideos',-->
+        <!--// immediately ask for camera access-->
+        <!--autoRequestMedia: true-->
+    <!--});-->
+    <!--webrtc.on('readyToCall', function () {-->
+        <!--// you can name it anything-->
+        <!--webrtc.joinRoom('your awesome room name');-->
+    <!--});-->
+<!--</script>-->
 </head>
 <body>
 <video id="localVideo"></video>
