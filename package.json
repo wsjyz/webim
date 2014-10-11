@@ -14,7 +14,6 @@
     "debug": "~0.7.4",
     "ejs": "~0.8.5",
     "socket.io":"1.1.0",
-    "simplewebrtc":"1.10.1",
-    "stun":"0.0.2"
+    "simplewebrtc":"1.10.1"
   }
 }
