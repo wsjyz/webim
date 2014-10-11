@@ -19,7 +19,7 @@ router.get('/chat', function(req, res) {
     res.render('chat');
 });
 
-router.get('/modal', function(req, res) {
+router.get('/stunclient', function(req, res) {
     res.render('modal');
 });
 
