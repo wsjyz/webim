@@ -39,13 +39,13 @@ function joinRoom(name,room){
             $('.contact-list').empty();
             var list_content = new StringBuffer();
 
-            for(var j = 0;j < userList.length;j++){
-                if(userList[j].userName != '' && userList[j].userName != null){
-                    list_content.append('<li id="user-'+userList[j].socketId+'" class="online">' +
+            for(var i = 0;i < userList.length;i++){
+                if(userList[i].userName != '' && userList[i].userName != null){
+                    list_content.append('<li id="user-'+userList[i].socketId+'" class="online">' +
                         '<a href="#" class="pull-left"><img alt="" src="/static/images/av2.jpg" />' +
-                        ' <span>'+userList[j].userName+'</span></a>' +
+                        ' <span>'+userList[i].userName+'</span></a>' +
                         '</a>' +
-                        '<div class="clearfhtmlEleIdx"></div></li>');
+                        '<div class="clearfix"></div></li>');
                 }
             }
             $('.contact-list').append(list_content.toString());
@@ -148,6 +148,21 @@ function pasteClob(evt){
     }
 }
 
+$("#joinVideo").click(function(){
+   $(this).prop("disabled", true).addClass("disabled");
+    webrtc = new SimpleWebRTC({
+        // the id/element dom element that will hold "our" video
+        localVideoEl: 'localVideo',
+        // the id/element dom element that will hold remote videos
+        remoteVideosEl: 'remoteVideos',
+        // immediately ask for camera access
+        autoRequestMedia: true
+    });
+    webrtc.on('readyToCall', function () {
+        // you can name it anything
+        webrtc.joinRoom(room);
+    });
+});
 
 
 //function agreeVideoRequest(needAgreeSocketId,whoAgreeSocketId){
