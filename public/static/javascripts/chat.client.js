@@ -8,7 +8,7 @@ var messages = $('#chat-messages');
 var message_box = $('.chat-message');
 var message_box_input = $('.chat-message textarea');
 var messages_inner = $('#chat-messages-inner');
-
+var htmlEleId = 0;
 var webrtc;
 
 function StringBuffer() {
@@ -27,18 +27,25 @@ function joinRoom(name,room){
     $('#userName').val(name);
     socket = io('http://localhost:3002/');//192.168.1.61 115.29.47.23 webim.izhuangyuan.cn
     socket.emit('join', {username:name, room:room});
-    socket.on('broadcast_join', function(userList){//监听加入事件
+    socket.on('broadcast_join', function(data){//监听加入事件
+        var userList = data.userList;
+        var joinName = data.joinName;
         if(userList){
+            htmlEleId = htmlEleId + 1;
+            var id = 'msg-'+htmlEleId;
+            messages_inner.append('<p class="offline al" id="'+id+'"><span>用户 <a href="#">@'+joinName+'</a> 加入</span></p>');
+            $('#'+id).fadeOut(0).addClass('show');
+
             $('.contact-list').empty();
             var list_content = new StringBuffer();
 
-            for(var i = 0;i < userList.length;i++){
-                if(userList[i].userName != '' && userList[i].userName != null){
-                    list_content.append('<li id="user-'+userList[i].socketId+'" class="online">' +
+            for(var j = 0;j < userList.length;j++){
+                if(userList[j].userName != '' && userList[j].userName != null){
+                    list_content.append('<li id="user-'+userList[j].socketId+'" class="online">' +
                         '<a href="#" class="pull-left"><img alt="" src="/static/images/av2.jpg" />' +
-                        ' <span>'+userList[i].userName+'</span></a>' +
+                        ' <span>'+userList[j].userName+'</span></a>' +
                         '</a>' +
-                        '<div class="clearfix"></div></li>');
+                        '<div class="clearfhtmlEleIdx"></div></li>');
                 }
             }
             $('.contact-list').append(list_content.toString());
@@ -56,12 +63,7 @@ function joinRoom(name,room){
             remove_user(msg.userId,msg.username);
         }
     });
-    socket.on('video_invite', function(msg){//监听聊天事件
-        if(msg){
-            add_message(msg.fromUserName+'向你发来视频邀请','/static/images/av2.jpg',
-                    '<a class="agree_a" data-needagreesocketId="'+msg.fromSocketId+'"  data-whoagreesocketId="'+msg.toSocketId+'"  href="javascript:;">接受</a>',true);
-        }
-    });
+
 }
 //发送消息
 $('.chat-message button').click(function(){
@@ -90,17 +92,17 @@ message_box_input.keypress(function(e){
         }
     }
 });
-var i = 0;
+
 function add_message(name,img,msg,clear) {
 
-    i = i + 1;
+    htmlEleId = htmlEleId + 1;
 
     var time = new Date();
     var hours = time.getHours();
     var minutes = time.getMinutes();
     if(hours < 10) hours = '0' + hours;
     if(minutes < 10) minutes = '0' + minutes;
-    var id = 'msg-'+i;
+    var id = 'msg-'+htmlEleId;
     var idname = name.replace(' ','-').toLowerCase();
     messages_inner.append('<p id="'+id+'" class="user-'+idname+'"><img class="head-pic" src="'+img+'" alt="" />'
         +'<span class="msg-block"><strong>'+name+'</strong> <span class="time">- '+hours+':'+minutes+'</span>'
@@ -117,12 +119,12 @@ function add_message(name,img,msg,clear) {
 }
 
 function remove_user(userid,name) {
-    i = i + 1;
+    htmlEleId = htmlEleId + 1;
     $('.contact-list li#user-'+userid).addClass('offline').delay(1000).slideUp(800,function(){
         $(this).remove();
     });
-    var id = 'msg-'+i;
-    messages_inner.append('<p class="offline al" id="'+id+'"><span>User <a href="#">@'+name+'</a> 离开了</span></p>');
+    var id = 'msg-'+htmlEleId;
+    messages_inner.append('<p class="offline al" id="'+id+'"><span>用户 <a href="#">@'+name+'</a> 离开了</span></p>');
     $('#'+id).fadeOut(0).addClass('show');
 }
 
