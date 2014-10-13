@@ -23,12 +23,10 @@ StringBuffer.prototype.toString = function() {
 
 var socket;
 
-function joinRoom(name){
+function joinRoom(name,room){
     $('#userName').val(name);
-    socket = io('http://192.168.1.144:3002/');//192.168.1.61 115.29.47.23 webim.izhuangyuan.cn
-    socket.emit('join', {username:name});
-    socket.on('broadcast_connected', function(msg){//监听加入事件
-    });
+    socket = io('http://localhost:3002/');//192.168.1.61 115.29.47.23 webim.izhuangyuan.cn
+    socket.emit('join', {username:name, room:room});
     socket.on('broadcast_join', function(userList){//监听加入事件
         if(userList){
             $('.contact-list').empty();
@@ -36,14 +34,9 @@ function joinRoom(name){
 
             for(var i = 0;i < userList.length;i++){
                 if(userList[i].userName != '' && userList[i].userName != null){
-                    var cameraHtml= '';
-                    if(userList[i].socketId != socket.io.engine.id){
-                        cameraHtml =  '<a href="javascript:sendVideoRequest(\''+socket.io.engine.id+'\',\''+userList[i].socketId+'\',\''+userList[i].userName+'\');" class="pull-right">' +
-                            '<img alt="" src="/static/images/camera.png" style="width: 16px;height: 16px;margin-top: 4px;" />';
-                    }
                     list_content.append('<li id="user-'+userList[i].socketId+'" class="online">' +
                         '<a href="#" class="pull-left"><img alt="" src="/static/images/av2.jpg" />' +
-                        ' <span>'+userList[i].userName+'</span></a>' +cameraHtml+
+                        ' <span>'+userList[i].userName+'</span></a>' +
                         '</a>' +
                         '<div class="clearfix"></div></li>');
                 }
@@ -69,24 +62,6 @@ function joinRoom(name){
                     '<a class="agree_a" data-needagreesocketId="'+msg.fromSocketId+'"  data-whoagreesocketId="'+msg.toSocketId+'"  href="javascript:;">接受</a>',true);
         }
     });
-    socket.on('video_invite_agree', function(msg){//监听同意视频事件
-        i = i + 1;
-        var id = 'msg-'+i;
-        messages_inner.append('<p class="offline al" id="'+id+'"><span>'+msg+'接受了你的视频请求</span></p>');
-        $('#'+id).fadeOut(0).addClass('show');
-        webrtc = new SimpleWebRTC({
-            // the id/element dom element that will hold "our" video
-            localVideoEl: 'localVideo',
-            // the id/element dom element that will hold remote videos
-            remoteVideosEl: 'remoteVideos',
-            // immediately ask for camera access
-            autoRequestMedia: true
-        });
-        webrtc.on('readyToCall', function () {
-            // you can name it anything
-            webrtc.joinRoom('your awesome room name');
-        });
-    });
 }
 //发送消息
 $('.chat-message button').click(function(){
@@ -94,7 +69,7 @@ $('.chat-message button').click(function(){
     var input = $('.chat-message textarea');
     if(input.val() != ''){
         socket.emit('say', {text:input.val()});
-        add_message('你:','/static/images/av1.jpg',input.val(),true);
+//        add_message('你:','/static/images/av1.jpg',input.val(),true);
     } else {
         $('.input-box').addClass('has-error');
     }
@@ -109,7 +84,7 @@ message_box_input.keypress(function(e){
     if(e.which == 13) {
         if($(this).val() != ''){
             socket.emit('say', {text:$(this).val()});
-            add_message('你:','/static/images/av1.jpg',$(this).val(),true);
+//            add_message('你:','/static/images/av1.jpg',$(this).val(),true);
         } else {
             $('.input-box').addClass('has-error');
         }
@@ -171,34 +146,8 @@ function pasteClob(evt){
     }
 }
 
-function sendVideoRequest(fromSocketId,toSocketId,toUserName){
-    var fromUserName = $('#userName').val();
-    socket.emit('video_invite', {fromSocketId:fromSocketId,fromUserName:fromUserName,toSocketId:toSocketId,toUserName:toUserName});
-    i = i + 1;
-    var id = 'msg-'+i;
-    console.log();
-    messages_inner.append('<p class="offline al" id="'+id+'"><span>你向'+toUserName+'发送了视频请求</span></p>');
-    $('#'+id).fadeOut(0).addClass('show');
-}
-$(document).ready(function(){
-    $(".chat-messages").on('click','.agree_a',function(){
 
-        socket.emit('video_invite_agree', {needAgreeSocketId:$(this).attr('data-needagreesocketId'),whoAgreeSocketId:$(this).attr('data-whoagreesocketId')});
-        $(this).replaceWith('接受');
-        webrtc = new SimpleWebRTC({
-            // the id/element dom element that will hold "our" video
-            localVideoEl: 'localVideo',
-            // the id/element dom element that will hold remote videos
-            remoteVideosEl: 'remoteVideos',
-            // immediately ask for camera access
-            autoRequestMedia: true
-        });
-        webrtc.on('readyToCall', function () {
-            // you can name it anything
-            webrtc.joinRoom('your awesome room name');
-        });
-    });
-});
+
 //function agreeVideoRequest(needAgreeSocketId,whoAgreeSocketId){
 //
 //}

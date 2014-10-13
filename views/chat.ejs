@@ -23,15 +23,19 @@
     <script src="/static/javascripts/jquery.nicescroll.min.js"></script>
     <script src="/static/javascripts/bootbox.min.js"></script>
     <script>
-/*    $(function(){
+    var room = window.location.hash.slice(1);
+    if(!room){
+        room = "default"
+    }
+    $(function(){
         bootbox.prompt("请输入昵称", function(result) {
             if (result === null) {
                 return false;
             } else {
-                joinRoom(result);
+                joinRoom(result,room);
             }
         });
-    });*/
+    });
     </script>
 </head>
 <body>
