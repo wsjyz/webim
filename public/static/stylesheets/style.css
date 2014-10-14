@@ -1,8 +1,12 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+#remoteVideos video {
+    height: 260px;
 }
-
-a {
-  color: #00B7FF;
+#localVideo {
+    height: 260px;
+}
+.contract-users{
+    z-index: 1;
+}
+.chat-record{
+    z-index: 2
 }
