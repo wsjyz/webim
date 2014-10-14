@@ -6,15 +6,7 @@
     <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/stylesheets/unicorn.css" />
     <link rel="stylesheet" href="/static/stylesheets/font-awesome.css" />
-    <style>
-        #remoteVideos video {
-            height: 260px;
-        }
-        #localVideo {
-            height: 260px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="/static/stylesheets/style.css" />
     <script src="/static/javascripts/simplewebrtc.bundle.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/javascripts/jquery-1.10.2.min.js"></script>
@@ -91,8 +83,8 @@
                             <div id="chat-messages-inner" class="chat-messages-inner"></div>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-default btn-sm">聊天记录</button>
-                            <button type="button" class="btn btn-default btn-sm" id="joinVideo">进入视频聊天</button>
+                            <button type="button" class="btn btn-default btn-sm" id="chatRecordBtn">聊天记录</button>
+                            <button type="button" class="btn btn-default btn-sm" id="joinVideoBtn">进入视频聊天</button>
                             <button type="button" class="btn btn-default btn-sm">进入音频聊天</button>
                         </div>
                         <div class="chat-message well">
@@ -107,17 +99,18 @@
                                 </span>
                         </div>
                     </div>
-                    <div class="chat-users panel-right" style="overflow: auto !important; height: 580px;">
+                    <div class="chat-users panel-right contract-users" style="overflow: auto !important; height: 580px;">
                         <div class="panel-title"><h5>在线人员</h5></div>
                         <div class="panel-content nopadding">
                             <ul class="contact-list">
-                                <!--<li id="user-michelle" class="online new"><a href="#"><img alt="" src="/images/av1.jpg" /> <span>Michelle</span></a><span class="msg-count badge badge-info">3</span></li>-->
-                                <!--<li id="user-neytiri" class="online"><a href="#"><img alt="" src="/images/av2.jpg" /> <span>Neytiri</span></a></li>-->
-                                <!--<li id="user-cartoon-man" class="online"><a href="#"><img alt="" src="/images/av3.jpg" /> <span>Cartoon Man</span></a></li>-->
-                                <!--<li id="user-rick-newton" class="online"><a href="#"><img alt="" src="/images/av1.jpg" /> <span>Rick Newton</span></a></li>-->
-                                <!--<li id="user-zack-renson" class="online new"><a href="#"><img alt="" src="/images/av2.jpg" /> <span>Zack Renson</span></a><span class="msg-count badge badge-info">1</span></li>-->
-                                <!--<li id="user-vladimir-ivanov"><a href="#"><img alt="" src="/images/av3.jpg" /> <span>Wladimir Ivanov</span></a><span class="away label label-warning">Away</span></li>-->
-                                <!--<li id="user-master-moda"><a href="#"><img alt="" src="/images/av1.jpg" /> <span>Master Moda</span></a><span class="away label label-warning">Away</span></li>-->
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="chatRecord" class="chat-users panel-right" style="overflow: auto !important; height: 580px;">
+                        <div class="panel-title"><h5>聊天记录</h5></div>
+                        <div class="panel-content nopadding">
+                            <ul >
+                                <li>JFDKF</li>
                             </ul>
                         </div>
                     </div>
