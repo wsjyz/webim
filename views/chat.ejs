@@ -7,42 +7,17 @@
     <link rel="stylesheet" href="/static/stylesheets/unicorn.css" />
     <link rel="stylesheet" href="/static/stylesheets/font-awesome.css" />
     <link rel="stylesheet" href="/static/stylesheets/style.css" />
-    <script src="/static/javascripts/simplewebrtc.bundle.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/static/javascripts/jquery-1.10.2.min.js"></script>
-    <script src="/static/javascripts/bootstrap.min.js"></script>
-    <script src="/static/javascripts/unicorn.js"></script>
-    <script src="/static/javascripts/jquery.nicescroll.min.js"></script>
-    <script src="/static/javascripts/bootbox.min.js"></script>
-    <script>
-    var room = window.location.hash.slice(1);
-    if(!room){
-        room = "default"
-    }
-    $(function(){
-        bootbox.prompt("请输入昵称", function(result) {
-            if (result === null) {
-                return false;
-            } else {
-                joinRoom(result,room);
-            }
-        });
-    });
-    </script>
 </head>
 <body>
 <input type="hidden" id="userName" />
 <div class="container" style="margin-top: 20px;">
         <div class="col-md-3">
-            <div class="widget-box widget-chat" >
+            <div class="widget-box widget-chat" draggable="true" >
                 <div class="widget-title">
 								<span class="icon">
 									<span class="glyphicon glyphicon-facetime-video"></span>
 								</span>
                     <h5>自己的视频</h5>
-                <!--    <div class="buttons">
-                        <a class="btn go-full-screen"><i class="fa fa-resize-full"></i></a>
-                    </div>-->
 
                 </div>
                 <div class="widget-content nopadding">
@@ -56,9 +31,6 @@
 									<span class="glyphicon glyphicon-facetime-video"></span>
 								</span>
                     <h5>对方视频</h5>
-                    <!--<div class="buttons">
-                        <a class="btn go-full-screen"><i class="fa fa-resize-full"></i></a>
-                    </div>-->
 
                 </div>
                 <div class="widget-content nopadding">
@@ -73,33 +45,29 @@
                                         <i class="fa fa-comment"></i>
                                     </span>
                     <h5>消息窗口</h5>
-                   <!-- <div class="buttons">
-                        <a class="btn go-full-screen"><i class="fa fa-resize-full"></i></a>
-                    </div>-->
                 </div>
                 <div class="widget-content nopadding">
                     <div class="chat-content panel-left" style="height: 580px;">
-                        <div class="chat-messages" id="chat-messages">
+                        <div class="chat-messages" id="chat-messages" style="overflow: auto !important;">
                             <div id="chat-messages-inner" class="chat-messages-inner"></div>
                         </div>
                         <div>
                             <button type="button" class="btn btn-default btn-sm" id="chatRecordBtn">聊天记录</button>
                             <button type="button" class="btn btn-default btn-sm" id="joinVideoBtn">进入视频聊天</button>
-                            <button type="button" class="btn btn-default btn-sm">进入音频聊天</button>
+                            <button type="button" class="btn btn-default btn-sm" id="joinAudioBtn">进入音频聊天</button>
                         </div>
                         <div class="chat-message well">
 
-                                <span class="input-box input-group">
-                                    <!--<input placeholder="Enter message here..." type="text" class="form-control input-small" name="msg-box" id="msg-box" />-->
-                                    <textarea onpaste="pasteClob(event)" cols=60 rows=3 class="form-control input-small" name="msg-box" id="msg-box"
-                                              placeholder="Enter message here..."></textarea>
-                                    <span class="input-group-btn" style="left: 5px;">
-                                        <button class="btn btn-success btn-small" type="button">Send</button>
-                                    </span>
-                                </span>
+                                    <div onpaste="pasteClob(event)" contenteditable="true"  name="msg-div" id="msg-div"
+                                               tabindex="1"></div>
+                                    <button class="btn btn-success btn-small" type="button" id="sendBtn">Send</button>
                         </div>
                     </div>
                     <div class="chat-users panel-right contract-users" style="overflow: auto !important; height: 580px;">
+                        <div class="invite-div" style="display: none;">
+                            <div style="overflow: hidden; height: 70px;" class="panel-message-content">csc正在等待大家加入</div>
+                            <button class="btn btn-success panelMessageBtn ">加入</button>
+                        </div>
                         <div class="panel-title"><h5>在线人员</h5></div>
                         <div class="panel-content nopadding">
                             <ul class="contact-list">
@@ -107,6 +75,10 @@
                         </div>
                     </div>
                     <div id="chatRecord" class="chat-users panel-right" style="overflow: auto !important; height: 580px;">
+                        <div class="invite-div" style="display: none">
+                            <div style="overflow: hidden; height: 70px;" class="panel-message-content">csc正在等待大家加入</div>
+                            <button class="btn btn-success panelMessageBtn" >加入</button>
+                        </div>
                         <div class="panel-title"><h5>聊天记录</h5></div>
                         <div class="panel-content nopadding">
                             <ul >
@@ -119,5 +91,20 @@
        </div>
 </div>
 </body>
+<script src="/static/javascripts/simplewebrtc.bundle.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/static/javascripts/jquery-1.10.2.min.js"></script>
+<script src="/static/javascripts/bootstrap.min.js"></script>
+<script src="/static/javascripts/unicorn.js"></script>
+<script src="/static/javascripts/jquery.nicescroll.min.js"></script>
+<script src="/static/javascripts/bootbox.min.js"></script>
 <script src="/static/javascripts/chat.client.js"></script>
+<script>
+
+   $(function(){
+
+   })
+
+
+</script>
 </html>
