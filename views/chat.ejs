@@ -1,109 +1,93 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>chat</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css" />
-    <link rel="stylesheet" href="/static/stylesheets/unicorn.css" />
-    <link rel="stylesheet" href="/static/stylesheets/font-awesome.css" />
-    <link rel="stylesheet" href="/static/stylesheets/style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/style.css"/>
 </head>
 <body>
-<input type="hidden" id="userName" />
-<div class="container" style="margin-top: 20px;">
-        <div class="col-md-3">
-            <div class="widget-box widget-chat" draggable="true" >
-                <div class="widget-title">
-								<span class="icon">
-									<span class="glyphicon glyphicon-facetime-video"></span>
-								</span>
-                    <h5>自己的视频</h5>
-
-                </div>
-                <div class="widget-content nopadding">
+<div class="webim-container" style="margin-top: 10px;">
+    <div class="row">
+        <!--左边视频展示区 -->
+        <div class="span3">
+            <div class="webim-local-div">
+                <div class="webim-title-bar"><i class="icon-facetime-video"></i> 自己的视频</div>
+                <div>
                     <video id="localVideo"></video>
-
                 </div>
             </div>
-            <div class="widget-box widget-chat">
-                <div class="widget-title">
-								<span class="icon">
-									<span class="glyphicon glyphicon-facetime-video"></span>
-								</span>
-                    <h5>对方视频</h5>
 
-                </div>
-                <div class="widget-content nopadding">
+            <div class="webim-remote-div">
+                <div class="webim-title-bar"><i class="icon-facetime-video"></i> 对方的视频</div>
+                <div>
                     <div id="remoteVideos"></div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-9">
-            <div class="widget-box widget-chat">
-                <div class="widget-title">
-                                    <span class="icon">
-                                        <i class="fa fa-comment"></i>
-                                    </span>
-                    <h5>消息窗口</h5>
-                </div>
-                <div class="widget-content nopadding">
-                    <div class="chat-content panel-left" style="height: 580px;">
-                        <div class="chat-messages" id="chat-messages" style="overflow: auto !important;">
-                            <div id="chat-messages-inner" class="chat-messages-inner"></div>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-default btn-sm" id="chatRecordBtn">聊天记录</button>
-                            <button type="button" class="btn btn-default btn-sm" id="joinVideoBtn">进入视频聊天</button>
-                            <button type="button" class="btn btn-default btn-sm" id="joinAudioBtn">进入音频聊天</button>
-                        </div>
-                        <div class="chat-message well">
 
-                                    <div onpaste="pasteClob(event)" contenteditable="true"  name="msg-div" id="msg-div"
-                                               tabindex="1"></div>
-                                    <button class="btn btn-success btn-small" type="button" id="sendBtn">Send</button>
-                        </div>
-                    </div>
-                    <div class="chat-users panel-right contract-users" style="overflow: auto !important; height: 580px;">
-                        <div class="invite-div" style="display: none;">
-                            <div style="overflow: hidden; height: 70px;" class="panel-message-content">csc正在等待大家加入</div>
-                            <button class="btn btn-success panelMessageBtn ">加入</button>
-                        </div>
-                        <div class="panel-title"><h5>在线人员</h5></div>
-                        <div class="panel-content nopadding">
-                            <ul class="contact-list">
-                            </ul>
-                        </div>
-                    </div>
-                    <div id="chatRecord" class="chat-users panel-right" style="overflow: auto !important; height: 580px;">
-                        <div class="invite-div" style="display: none">
-                            <div style="overflow: hidden; height: 70px;" class="panel-message-content">csc正在等待大家加入</div>
-                            <button class="btn btn-success panelMessageBtn" >加入</button>
-                        </div>
-                        <div class="panel-title"><h5>聊天记录</h5></div>
-                        <div class="panel-content nopadding">
-                            <ul >
-                                <li>JFDKF</li>
-                            </ul>
-                        </div>
-                    </div>
+        </div>
+        <!--中间区 -->
+        <div class="span7 webim-middle">
+            <div class="webim-title-bar"><i class="icon-comment"></i> 消息窗口</div>
+            <div class="webim-message-box">
+                <div class="webim-message-box-innner">
+                    <div class="webim-message-inner-left"><img class="webim-user-head-pic" alt="" src="" /><span class="webim-triangle"></span><div class="webim-message"><h6>不 - <span class="time">11:15:23</span></h6>fsa</div></div>
+                    <div class="webim-message-inner-left"><img class="webim-user-head-pic" alt="" src="/static/img/av2.jpg" /><span class="webim-triangle"></span><div class="webim-message">jfsfjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdsfsdfasdfdsafsdfsadfasdjf</div></div>
                 </div>
             </div>
-       </div>
+            <div class="webim-control-bar">
+                <button type="button" class="btn  btn-small btn-primary" >进入视频聊天</button>
+                <button type="button" class="btn  btn-small btn-primary">进入音频聊天</button>
+                <button type="button" class="btn  btn-small btn-primary">添加图片</button>
+                <button type="button" class="btn  btn-small btn-primary">聊天记录</button>
+            </div>
+            <div class="webim-message-send-box">
+                <div class="webim-message-send-div" contenteditable="true"></div>
+                <div class="webim-message-send-bar">
+                   <div class="webim-message-send-btn-group btn-group dropup">
+                       <button class="btn btn-small btn-success webim-message-send-btn" id="webim_message_send_btn">发送</button>
+                       <button class="btn btn-small btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                       <ul class="dropdown-menu">
+                           <li> 按Alt+Enter键发送消息 </li>
+                       </ul>
+                   </div>
+                </div>
+            </div>
+        </div>
+        <!--右侧区-->
+        <div class="span3 webim-right">
+          <!--  <div class="webim-invite" >
+                <div  style="overflow: hidden; height: 80px;">fsdf</div>
+                <button class="btn btn-success" >加入</button>
+            </div>-->
+            <div class="webim-online-users-box">
+                <div class="webim-title-bar"><i class="icon-th-list"></i> 在线人员</div>
+                <ul class="webim-online-users">
+                </ul>
+            </div>
+
+            <!--<div style="width: 400px; background: blue">
+                <div class="webim-title-bar"><i class="icon-comment"></i> 聊天记录</div>
+            </div>-->
+
+        </div>
+
+    </div>
 </div>
 </body>
+<script src="/static/javascripts/jquery-1.7.min.js"></script>
 <script src="/static/javascripts/simplewebrtc.bundle.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/static/javascripts/jquery-1.10.2.min.js"></script>
 <script src="/static/javascripts/bootstrap.min.js"></script>
-<script src="/static/javascripts/unicorn.js"></script>
-<script src="/static/javascripts/jquery.nicescroll.min.js"></script>
 <script src="/static/javascripts/bootbox.min.js"></script>
 <script src="/static/javascripts/chat.client.js"></script>
 <script>
 
-   $(function(){
-
-   })
+    $(function () {
+//        $(".webim-message-box").animate({ scrollTop: $(".webim-message-box-innner").height() },1000);
+       // $(".webim-invite").show(9000);
+    })
 
 
 </script>
