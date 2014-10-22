@@ -23,5 +23,7 @@ router.get('/stunclient', function(req, res) {
     res.render('modal');
 });
 
-
+router.get("/test",function(req, res){
+    res.render("test")
+})
 module.exports = router;

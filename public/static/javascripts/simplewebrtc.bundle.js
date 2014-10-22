@@ -93,7 +93,7 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-            url: 'http://192.168.1.144:8888',
+            url: 'http://signaling.simplewebrtc.com:8888',
             socketio: {/* 'force new connection':true*/},
             debug: false,
             localVideoEl: '',
@@ -320,9 +320,9 @@ SimpleWebRTC.prototype = Object.create(WildEmitter.prototype, {
 SimpleWebRTC.prototype.leaveRoom = function () {
     if (this.roomName) {
         this.connection.emit('leave');
-        this.webrtc.peers.forEach(function (peer) {
-            peer.end();
-        });
+        while(this.webrtc.peers.length>0){
+            this.webrtc.peers[0].end();
+        }
         if (this.getLocalScreen()) {
             this.stopScreenShare();
         }
@@ -345,7 +345,11 @@ SimpleWebRTC.prototype.handlePeerStreamAdded = function (peer) {
     peer.videoEl = video;
     video.id = this.getDomId(peer);
 
-    if (container) container.appendChild(video);
+    if (container) {
+        var videoWrapper = $('<div class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title"></span> <i class="icon-remove"></i> </div> </div>');
+        videoWrapper.append(video);
+        $(container).append(videoWrapper);
+    }
 
     this.emit('videoAdded', video, peer);
 
@@ -367,7 +371,7 @@ SimpleWebRTC.prototype.handlePeerStreamRemoved = function (peer) {
     var container = this.getRemoteVideoContainer();
     var videoEl = peer.videoEl;
     if (this.config.autoRemoveVideos && container && videoEl) {
-        container.removeChild(videoEl);
+        $($(videoEl).parent().remove());
     }
     if (videoEl) this.emit('videoRemoved', videoEl, peer);
 };
@@ -452,9 +456,12 @@ SimpleWebRTC.prototype.getLocalVideoContainer = function () {
         el.oncontextmenu = function () { return false; };
         return el;
     } else if (el) {
+        var videoWrapper = $('<div class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title">自己的视频</span>' +
+            ' </div><div class="webim-video-control-box"><div class="webim-video-control-bar"><span onclick="toggleVideo(this)">关闭视频</span> <span onclick="toggleAudio(this)">关闭语音</span> <span onclick="holdOffVIdeo(this)">挂断</span></div></div> </div>');
         var video = document.createElement('video');
         video.oncontextmenu = function () { return false; };
-        el.appendChild(video);
+        videoWrapper.append(video);
+        $(el).append(videoWrapper);
         return video;
     } else {
         return;

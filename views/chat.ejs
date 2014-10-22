@@ -11,36 +11,22 @@
 <div class="webim-container" style="margin-top: 10px;">
     <div class="row">
         <!--左边视频展示区 -->
-        <div class="span3">
-            <div class="webim-local-div">
-                <div class="webim-title-bar"><i class="icon-facetime-video"></i> 自己的视频</div>
-                <div>
-                    <video id="localVideo"></video>
-                </div>
-            </div>
+        <div class="span4">
+            <div  id="webim-videos" class="webim-video-display">
 
-            <div class="webim-remote-div">
-                <div class="webim-title-bar"><i class="icon-facetime-video"></i> 对方的视频</div>
-                <div>
-                    <div id="remoteVideos"></div>
-                </div>
             </div>
-
         </div>
         <!--中间区 -->
         <div class="span7 webim-middle">
             <div class="webim-title-bar"><i class="icon-comment"></i> 消息窗口</div>
             <div class="webim-message-box">
                 <div class="webim-message-box-innner">
-                    <div class="webim-message-inner-left"><img class="webim-user-head-pic" alt="" src="" /><span class="webim-triangle"></span><div class="webim-message"><h6>不 - <span class="time">11:15:23</span></h6>fsa</div></div>
-                    <div class="webim-message-inner-left"><img class="webim-user-head-pic" alt="" src="/static/img/av2.jpg" /><span class="webim-triangle"></span><div class="webim-message">jfsfjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdjdljflsdjflsdjflffasdfdsfsdfasdfdsafsdfsadfasdjf</div></div>
                 </div>
             </div>
             <div class="webim-control-bar">
-                <button type="button" class="btn  btn-small btn-primary" >进入视频聊天</button>
-                <button type="button" class="btn  btn-small btn-primary">进入音频聊天</button>
-                <button type="button" class="btn  btn-small btn-primary">添加图片</button>
-                <button type="button" class="btn  btn-small btn-primary">聊天记录</button>
+                <button type="button" class="btn  btn-small btn-primary" id="webim_message_video_btn">进入视频聊天</button>
+                <button type="button" class="btn  btn-small btn-primary">添加 图片</button>
+                <button type="button" class="btn  btn-small btn-primary" id="webim_message_record_btn">聊天记录</button>
             </div>
             <div class="webim-message-send-box">
                 <div class="webim-message-send-div" contenteditable="true"></div>
@@ -57,19 +43,23 @@
         </div>
         <!--右侧区-->
         <div class="span3 webim-right">
-          <!--  <div class="webim-invite" >
-                <div  style="overflow: hidden; height: 80px;">fsdf</div>
+            <div class="webim-invite">
+                <div  style="overflow: hidden; height: 80px;"></div>
                 <button class="btn btn-success" >加入</button>
-            </div>-->
+            </div>
             <div class="webim-online-users-box">
                 <div class="webim-title-bar"><i class="icon-th-list"></i> 在线人员</div>
                 <ul class="webim-online-users">
                 </ul>
             </div>
 
-            <!--<div style="width: 400px; background: blue">
+            <div class="webim-record-box">
                 <div class="webim-title-bar"><i class="icon-comment"></i> 聊天记录</div>
-            </div>-->
+                <ul class="webim-record-ul">
+                    <li>fsdf</li>
+                    <li>fsdfdsfd</li>
+                </ul>
+            </div>
 
         </div>
 
