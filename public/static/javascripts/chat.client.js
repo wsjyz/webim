@@ -104,7 +104,9 @@ $(function () {
 
                 $("#webim_file").change(function(e){
                     try{
-                        readImg(e.target.files[0]);
+                        for(var i = 0; i < e.target.files.length; i++){
+                            readImg(e.target.files[i]);
+                        }
                     }catch(err){
                         console.log(err)
                         bootbox.alert("该浏览器不支持添加图片功能!");
