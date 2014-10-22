@@ -43,10 +43,13 @@ $(function () {
                 });
 
                 $("#webim_message_send_btn").click(function() {
-                    var content = messageSendDiv.html();
-                    socket.emit('broadcast_send_text_msg', {content:content});
-                    addMessage({user:{userPic:userPic,userName:userName},content:content,time:getTimeStr()},true);
-                    messageSendDiv.html("").focus();
+                    doRegxSthAndSend();
+                });
+
+                messageSendDiv.keyup(function(event){
+                    if(event.altKey && event.keyCode == 13){
+                        doRegxSthAndSend();
+                    }
                 });
 
                 //监听聊天的消息接收
@@ -95,6 +98,18 @@ $(function () {
                     }
                 });
 
+                $("#webim_message_img_btn").click(function(){
+                    $("#webim_file").trigger("click");
+                });
+
+                $("#webim_file").change(function(e){
+                    try{
+                        readImg(e.target.files[0]);
+                    }catch(err){
+                        console.log(err)
+                        bootbox.alert("该浏览器不支持添加图片功能!");
+                    }
+                });
 
                 $("#webim_message_record_btn").click(function(){
                     var pInvite = $(".webim-invite");
@@ -133,6 +148,19 @@ $(function () {
                     }
                 });
 
+                function doRegxSthAndSend(){
+                    var content = messageSendDiv.html();
+                    content = content.replace(/<(?!img)[\s\S]*?>/ig," ");
+                    content = $.trim(content);
+                    if(!content){
+                        bootbox.alert("发送内容不能为空!");
+                    }else{
+                        socket.emit('broadcast_send_text_msg', {content:content});
+                        addMessage({user:{userPic:userPic,userName:userName},content:content,time:getTimeStr()},true);
+                    }
+                    messageSendDiv.html("").focus();
+                }
+
                 toggleVideo = function (arg){
                     if($(arg).html() == "关闭视频"){
                         webRTC.pauseVideo();
@@ -161,8 +189,22 @@ $(function () {
                 }
 
 
+
             }
         });
+    }
+
+    function readImg(file){
+        var reader = new FileReader();
+        reader.onload = function(){
+            appendToMessage( reader.result );
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function appendToMessage(url){
+        messageSendDiv.append("<img src='"+url+"' /><br>");
+        messageSendDiv.animate({ scrollTop: 9999 });
     }
 
     function addMessage(data, isSelf){
@@ -246,6 +288,7 @@ $(function () {
             pInvite.hide(1000);
         }
     }
+
 
 
     function StringBuffer() {

@@ -206,3 +206,7 @@ video{
 .webim-record-ul-invite{
     height: 458px;
 }
+.webim-message-send-div img{
+    display: block;
+    width: 60%;
+}
