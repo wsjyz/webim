@@ -1,4 +1,10 @@
 $(function () {
+    $( "#datepicker" ).datepicker({
+        dateFormat:"yy-mm-dd"
+    });
+    var paginationOptions={
+        pageSize:30
+    }
     var webRTC;
     var messageInner = $(".webim-message-box-innner");
     var onlineUsers = $(".webim-online-users");
@@ -6,21 +12,17 @@ $(function () {
     var messageBox = $(".webim-message-box");
     var count = 0;
     var socket;
-    var userId = new Date().getTime();
-    var userPic = "/static/img/av2.jpg";
-    var room = window.location.hash.slice(1);
+    var userId = $("#userId").val();
+    var userName = $("#userName").val();
+    var userPic = $("#userPic").val();
+    var chatType = $("#chatType").val();
+    var toUserId = $("#toUserId").val();
+    var toUserName = $("#toUserName").val();
+    var room = $("#room").val();
     if (!room) {
         room = "default"
     }
- /*   bootbox.prompt("What is your name?", function (result) {
-        if (result === null || $.trim(result) == "") {
-            bootbox.alert("用户信息丢失,请重新打开网页!");
-        } else {
-            joinRoom(userId, result, room,userPic);
-
-        }
-    });*/
-    joinRoom(userId, new Date().getTime(), room,userPic);
+    joinRoom(userId, userName, room,userPic);
 
     function joinRoom(userId, userName, room,userPic) {
         socket = io('http://feifei.com:3002/');
@@ -125,39 +127,54 @@ $(function () {
                         if(pInvite.is(":hidden")){
                             pOnlineUsers.removeClass("webim-invite-users");
                             pRecordUl.removeClass("webim-record-ul-invite");
+                            pUserBOx.removeClass("webim-online-users-box-invite");
+                            pRecoreBox.removeClass("webim-record-box-invite");
                             pInvite.removeClass("webim-invite-record");
                             pUserBOx.show();
                         }else{
                             pOnlineUsers.addClass("webim-invite-users");
                             pRecordUl.removeClass("webim-record-ul-invite");
+                            pUserBOx.addClass("webim-online-users-box-invite");
+                            pRecoreBox.addClass("webim-record-box-invite");
                             pInvite.removeClass("webim-invite-record");
                             pUserBOx.show();
                         }
+                        $(".webim-record-loading").hide();
+                        $("#datepicker").val("");
                     }else{
                         $(this).addClass("active");
                         pUserBOx.hide();
                         if(pInvite.is(":hidden")){
                             pInvite.addClass("webim-invite-record");
                             pOnlineUsers.removeClass("webim-invite-users");
+                            pUserBOx.removeClass("webim-online-users-box-invite");
                             pRecordUl.removeClass("webim-record-ul-invite");
+                            pRecoreBox.removeClass("webim-record-box-invite");
                             pRecoreBox.show();
                         }else{
                             pInvite.addClass("webim-invite-record");
                             pRecordUl.addClass("webim-record-ul-invite");
+                            pUserBOx.addClass("webim-online-users-box-invite");
                             pOnlineUsers.addClass("webim-invite-users");
+                            pRecoreBox.addClass("webim-record-box-invite");
                             pRecoreBox.show();
                         }
+                        $(".webim-record-loading").show();
+                        resetPagination();
+                        registerAjaxRecord();
                     }
+
                 });
 
                 function doRegxSthAndSend(){
                     var content = messageSendDiv.html();
                     content = content.replace(/<(?!img)[\s\S]*?>/ig," ");
                     content = $.trim(content);
+                    console.log(content+"--content");
                     if(!content){
                         bootbox.alert("发送内容不能为空!");
                     }else{
-                        socket.emit('broadcast_send_text_msg', {content:content});
+                        socket.emit('broadcast_send_text_msg', {content:content,toUserId:toUserId,toUserName:toUserName,toUserType:chatType});
                         addMessage({user:{userPic:userPic,userName:userName},content:content,time:getTimeStr()},true);
                     }
                     messageSendDiv.html("").focus();
@@ -260,7 +277,9 @@ $(function () {
         var pRecordBtn = $("#webim_message_record_btn");
         var pInvite = $(".webim-invite");
         var pOnlineUsers = $(".webim-online-users");
+        var pOnlineUsersBox = $(".webim-online-users-box");
         var pRecordUl = $(".webim-record-ul");
+        var pRecordBox = $(".webim-record-box");
         pInvite.children("button").unbind();
         pInvite.children("button").bind("click", function () {
             pvideoBtn.trigger("click");
@@ -268,10 +287,12 @@ $(function () {
         if(pRecordBtn.hasClass("active")){
             pInvite.addClass("webim-invite-record");
             pRecordUl.addClass("webim-record-ul-invite");
+            pRecordBox.addClass("webim-record-box-invite");
             pInvite.children("div").html(msg);
             pInvite.show(1000);
         }else{
             pOnlineUsers.addClass("webim-invite-users");
+            pOnlineUsersBox.addClass("webim-online-users-box-invite");
             pInvite.children("div").html(msg);
             pInvite.show(1000);
         }
@@ -280,17 +301,75 @@ $(function () {
         var pRecordBtn = $("#webim_message_record_btn");
         var pInvite = $(".webim-invite");
         var pOnlineUsers = $(".webim-online-users");
+        var pOnlineUsersBox = $(".webim-online-users-box");
         var pRecordUl = $(".webim-record-ul");
+        var pRecordBox = $(".webim-record-box");
         if(pRecordBtn.hasClass("active")){
             pInvite.removeClass("webim-invite-record");
             pRecordUl.removeClass("webim-record-ul-invite");
+            pRecordBox.removeClass("webim-record-box-invite");
             pInvite.hide(1000);
         }else{
             pOnlineUsers.removeClass("webim-invite-users");
+            pOnlineUsersBox.removeClass("webim-online-users-box-invite");
             pInvite.hide(1000);
         }
     }
 
+    function resetPagination(){
+        $(".webim-record-ul").empty();
+        $(".pagination").remove();
+        $(".webim-pagination-wrapper").append('<div class="pagination"> <a href="" class="first" data-action="first">&laquo;</a> <a href="" class="previous" data-action="previous">&lsaquo;</a> <input type="text" readonly="readonly" /> <a href="" class="next" data-action="next">&rsaquo;</a> <a href="" class="last" data-action="last">&raquo;</a></div>');
+    }
+
+    $( "#datepicker").change(function(){
+        if(!$(this).is(":hidden")){
+            resetPagination();
+            registerAjaxRecord();
+        }
+    });
+    function registerAjaxRecord(){
+        var pRecordUl = $(".webim-record-ul");
+        var openPrivateMsg = {};
+        if(chatType=="user"){
+            openPrivateMsg.fromUserId = userId;
+            openPrivateMsg.toUserId = toUserId;
+
+        }else{
+            openPrivateMsg.toUserId=toUserId;
+        }
+        if($( "#datepicker").prop("value")){
+            openPrivateMsg.createTime=$( "#datepicker").prop("value");
+        }
+        var jqxhr = $.post("record", {page: '{pageSize:'+paginationOptions.pageSize+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},"json");
+        jqxhr.success(function(data){
+            $(".webim-record-loading").hide()
+            $('.pagination').jqPagination({
+                max_page	: data.TotalPages,
+                paged		: function(page) {
+                    $(".webim-record-ul").empty();
+                    $(".webim-record-loading").show();
+                    var jqxhrInner =  $.post("record", {page: '{pageSize:'+paginationOptions.pageSize+',pageNo:'+page+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},function(data){
+                        $.each(data.rows,function(index, value){
+                            pRecordUl.append('<li><h6>'+value.fromUserName+' <span class="time">'+value.createTime+'</span></h6>'+value.msgContent+'</li>');
+                        });
+                        $(".webim-record-loading").hide();
+                    },"json");
+                    jqxhrInner.error(function(){
+                        bootbox.alert("出现错误,请稍后重试");
+                        $("#webim_message_record_btn").trigger("click");
+                    });
+                }
+            });
+            $.each(data.rows,function(index, value){
+                pRecordUl.append('<li><h6>'+value.fromUserName+' <span class="time">'+value.createTime+'</span></h6>'+value.msgContent+'</li>');
+            });
+        });
+        jqxhr.error(function(){
+            bootbox.alert("出现错误,请稍后重试");
+            $("#webim_message_record_btn").trigger("click");
+        });
+    }
 
 
     function StringBuffer() {

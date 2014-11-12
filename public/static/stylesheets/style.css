@@ -57,7 +57,6 @@ video{
     font-size: 12px;
     font-weight: bold;
     border-bottom: 1px solid #CDCDCD;
-
 }
 
 .webim-invite{
@@ -65,6 +64,7 @@ video{
     padding-top: 12px;
     display: none;
     background: #fafafa;
+    border-radius: 6px 6px 0 0 ;
 }
 .webim-invite-record{
     width: 370px;
@@ -102,7 +102,6 @@ video{
     border-radius: 6px;
 }
 .webim-right {
-    background: #fafafa;
 }
 
 .webim-message-send-bar .webim-message-send-btn-group{
@@ -181,7 +180,7 @@ video{
 .webim-online-users li img{
     width: 28px;
     height: 28px;
-    border-radius: 6px;
+    border-radius: 50%;
     margin-right: 5px;
 }
 
@@ -190,23 +189,60 @@ video{
     font-style: italic;
 }
 
-.webim-record-box{
+
+.webim-online-users-box{
+    background: #fafafa;
+    border-radius: 6px;
+}
+.webim-online-users-box-invite{
+    border-radius: 0 0 6px 6px;
+}
+.webim-record-box {
     display: none;
     width: 370px;
     background: #fafafa;
-
+    border-radius: 6px;
+}
+.webim-record-box-invite {
+    border-radius: 0 0 6px 6px;
 }
 .webim-record-ul{
+    padding: 0 6px;
     list-style: none;
     margin: 0;
-    padding: 0;
-    height: 580px;
+    height: 552px;
     overflow-y: auto;
+    word-break:break-all;
 }
 .webim-record-ul-invite{
-    height: 458px;
+    height: 430px;
 }
 .webim-message-send-div img{
     display: block;
     width: 60%;
+}
+.webim-pagination-wrapper {
+    border-top: 1px solid #CDCDCD;
+    padding-left: 6px;
+    border-radius: 6px;
+}
+.pagination{
+    margin: 0 !important;
+}
+#datepicker{
+    margin-right: 10px;
+    margin-bottom: 2px;
+    margin-top: -12px;
+    padding: 0;
+    width: 100px;
+    height: 20px;
+    outline: none;
+    vertical-align: middle;
+    text-align: center;
+}
+.webim-record-loading {
+    position: absolute;
+    left: 1140px;
+    top:300px;
+    display: none;
 }

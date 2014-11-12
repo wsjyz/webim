@@ -5,9 +5,19 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/jqpagination.css"/>
     <link rel="stylesheet" href="/static/stylesheets/style.css"/>
 </head>
 <body>
+    <input type="hidden" id="userId" value="<%=userId%>"/>
+    <input type="hidden" id="userName" value="<%=userName%>"/>
+    <input type="hidden" id="userPic" value="<%=userPic%>"/>
+    <input type="hidden" id="chatType" value="<%=chatType%>"/>
+    <input type="hidden" id="toUserId" value="<%=toUserId%>"/>
+    <input type="hidden" id="toUserName" value="<%=toUserName%>"/>
+    <input type="hidden" id="room" value="<%=room%>"/>
+
 <div class="webim-container" style="margin-top: 10px;">
     <div class="row">
         <!--左边视频展示区 -->
@@ -55,13 +65,14 @@
                 <ul class="webim-online-users">
                 </ul>
             </div>
-
+            <img src="/static/img/loading.gif" class="webim-record-loading"/>
             <div class="webim-record-box">
                 <div class="webim-title-bar"><i class="icon-comment"></i> 聊天记录</div>
                 <ul class="webim-record-ul">
-                    <li>fsdf</li>
-                    <li>fsdfdsfd</li>
                 </ul>
+                <div class="webim-pagination-wrapper">
+                   <div style="display: inline-block"> <span style="display: inline-block;position: relative;top: -6px;">日期: </span><input type="text" id="datepicker" readonly="readonly"></div>
+                </div>
             </div>
 
         </div>
@@ -70,6 +81,8 @@
 </div>
 </body>
 <script src="/static/javascripts/jquery-1.7.min.js"></script>
+<script src="/static/javascripts/jquery-ui.min.js"></script>
+<script src="/static/javascripts/jquery.jqpagination.min.js"></script>
 <script src="/static/javascripts/simplewebrtc.bundle.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/static/javascripts/bootstrap.min.js"></script>
@@ -78,8 +91,7 @@
 <script>
 
     $(function () {
-//        $(".webim-message-box").animate({ scrollTop: $(".webim-message-box-innner").height() },1000);
-       // $(".webim-invite").show(9000);
+
     })
 
 
