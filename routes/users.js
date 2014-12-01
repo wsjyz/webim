@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var http = require("http");
 var qs = require("querystring");
+var settings = require("../lib/settings")
 /* GET users listing. */
 router.get('/', function(req, res) {
   res.send('respond with a resource');
@@ -32,36 +33,43 @@ router.get('/chat', function(req, res) {
         return ;
     }
     var arg = {
-        appKey_:"2688CDD8C0634A1A88C15D64C47C1330",
-        sign_:"3C1C35AFD67EB8A45DB565FAB70DDE6C",
+        appKey_:settings.appKey,
+        sign_:settings.chat_sign,
         timestamp_:new Date().getTime()
     };
     arg.elnSessionId = elnSessionId;
     var options = {
-        hostname: "eln.test2.net",
+        hostname: settings.open_hostName,
         path: "/open/v1/uc/user/isLoginAndReturnOpenUser.html?" + qs.stringify(arg),
         method:'GET'
     }
     var req = http.request(options, function (resp) {
         resp.setEncoding("utf-8");
+        if(resp.statusCode != 200){
+            res.render("tip", {login: "error"});
+            return ;
+        }
         resp.on('data', function (chunk) {
             var data = JSON.parse(chunk);
-            console.log(chunk)
             if (!!data && data.userId) {
                 res.render('chat', {
                     userId: data.userId,
                     userName: data.userName,
-                    userPic: data.faceUrl,
+                    userPic: data.faceUrl?data.faceUrl:"/static/img/1.png",
                     chatType: "user",
                     toUserId: toUserId,
                     toUserName: toUserName,
-                    room: room
+                    room: room,
+                    corpCode:data.corpCode
                 });
             }else{
                 res.render("tip", {login: "login"});
                 return ;
             }
         })
+    });
+    req.on("error", function (error) {
+        console.log(error);
     });
     req.end();
 });
@@ -75,6 +83,32 @@ router.get("/test",function(req, res){
 })
 router.post("/record", function (req, res) {
     var arg = req.body;
-    res.send({TotalPages:98,rows:[{fromUserName:"张三",createTime:"2014-09-08 03:04:05",msgContent:'dsadsakdhsakdjh'+JSON.stringify(req.body)},{fromUserName:"李四", createTime:"2014-10-01 09:08:03",msgContent:"fsdjflafjldas"}]});
+    var options = {
+        hostname:settings.open_hostName,
+        path:'/open/v1/im/message/listPrivateMsgs.html',
+        method:'POST'
+    };
+    arg.appKey_ =settings.appKey;
+    arg.sign_ = settings.record_sign;
+    arg.timestamp_ = new Date().getTime();
+    var postReq = http.request(options);
+    postReq.setHeader("Content-Type", "text/html");
+    postReq.on("response", function(postRes){
+        var str = "";
+        postRes.on("data",function(chunk){
+            console.log(chunk.toString())
+            str += chunk.toString();
+        })
+        postRes.on("end",function(){
+            res.send(JSON.parse(str));
+        });
+    });
+    postReq.on("error", function(error){
+        console.log(error);
+    })
+    console.log(qs.stringify(arg));
+    postReq.write(qs.stringify(arg));
+    postReq.end();
+
 });
 module.exports = router;

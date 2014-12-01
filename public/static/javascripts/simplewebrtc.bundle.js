@@ -93,8 +93,8 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-            url: 'http://signaling.simplewebrtc.com:8888',
-            socketio: {/* 'force new connection':true*/},
+            url: 'http://192.168.1.9:5030',
+            socketio: { 'force new connection':true},
             debug: false,
             localVideoEl: '',
             remoteVideosEl: '',
@@ -145,13 +145,11 @@ function SimpleWebRTC(opts) {
 
     // our socket.io connection
     connection = this.connection = io.connect(this.config.url, this.config.socketio);
-
     connection.on('connect', function () {
         self.emit('connectionReady', connection.socket.sessionid);
         self.sessionReady = true;
         self.testReadiness();
     });
-
     connection.on('message', function (message) {
         var peers = self.webrtc.getPeers(message.from, message.roomType);
         var peer;
@@ -296,7 +294,7 @@ function SimpleWebRTC(opts) {
     this.webrtc.on('localScreenStopped', function (stream) {
         console.log('local screen stopped');
         self.stopScreenShare();
-        /*
+
         self.connection.emit('unshareScreen');
         self.webrtc.peers.forEach(function (peer) {
             console.log('peer', peer);
@@ -304,12 +302,11 @@ function SimpleWebRTC(opts) {
                 peer.end();
             }
         });
-        */
+
     });
 
     if (this.config.autoRequestMedia) this.startLocalVideo();
 }
-
 
 SimpleWebRTC.prototype = Object.create(WildEmitter.prototype, {
     constructor: {
@@ -340,13 +337,14 @@ SimpleWebRTC.prototype.handlePeerStreamAdded = function (peer) {
     var self = this;
     var container = this.getRemoteVideoContainer();
     var video = attachMediaStream(peer.stream);
+    video.oncontextmenu = function () { return false; };
 
     // store video element as part of peer for easy removal
     peer.videoEl = video;
     video.id = this.getDomId(peer);
 
     if (container) {
-        var videoWrapper = $('<div class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title"></span> <i class="icon-remove"></i> </div> </div>');
+        var videoWrapper = $('<div class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title"></span> </div> </div>');
         videoWrapper.append(video);
         $(container).append(videoWrapper);
     }
@@ -457,7 +455,7 @@ SimpleWebRTC.prototype.getLocalVideoContainer = function () {
         return el;
     } else if (el) {
         var videoWrapper = $('<div class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title">自己的视频</span>' +
-            ' </div><div class="webim-video-control-box"><div class="webim-video-control-bar"><span onclick="toggleVideo(this)">关闭视频</span> <span onclick="toggleAudio(this)">关闭语音</span> <span onclick="holdOffVIdeo(this)">挂断</span></div></div> </div>');
+            ' </div><div class="webim-video-control-box"><div class="webim-volum-box"><img src="/static/img/audioCover.gif"></img></div><div class="webim-video-control-bar"><img src="/static/img/videoOn.png" onclick="toggleVideo(this)"/> <img src="/static/img/audioOn.png" onclick="toggleAudio(this)" /> <img src="/static/img/hangup.png" onclick="holdOffVIdeo(this)" /></div></div> </div>');
         var video = document.createElement('video');
         video.oncontextmenu = function () { return false; };
         videoWrapper.append(video);
@@ -5580,13 +5578,11 @@ module.exports = function (constraints, cb) {
     var error;
     var denied = 'PERMISSION_DENIED';
     var notSatified = 'CONSTRAINT_NOT_SATISFIED';
-
     // make constraints optional
     if (!haveOpts) {
         cb = constraints;
         constraints = defaultOpts;
     }
-
     // treat lack of browser support like an error
     if (!func) {
         // throw proper error per spec

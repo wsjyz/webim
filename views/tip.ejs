@@ -11,6 +11,8 @@
     if(error == "login"){
         alert("请先登录");
         window.location.href = "/";
+    }else if (error="error"){
+        alert("open服务异常");
     }else{
         alert("链接不完整");
     }

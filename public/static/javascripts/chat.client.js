@@ -5,6 +5,7 @@ $(function () {
     var paginationOptions={
         pageSize:30
     }
+    var getMdiea = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
     var webRTC;
     var messageInner = $(".webim-message-box-innner");
     var onlineUsers = $(".webim-online-users");
@@ -18,6 +19,7 @@ $(function () {
     var chatType = $("#chatType").val();
     var toUserId = $("#toUserId").val();
     var toUserName = $("#toUserName").val();
+    var corpCode = $("#corpCode").val();
     var room = $("#room").val();
     if (!room) {
         room = "default"
@@ -25,7 +27,7 @@ $(function () {
     joinRoom(userId, userName, room,userPic);
 
     function joinRoom(userId, userName, room,userPic) {
-        socket = io('http://feifei.com:3002/');
+        socket = io('http://192.168.1.9:3002/');
         socket.on("connection_quit", function (data) {
             if(data.quit) {
                 bootbox.alert(data.msg);
@@ -44,12 +46,17 @@ $(function () {
                     onlineUsers.append(listContent.toString());
                 });
 
+                socket.on("broadcast_join_room_user", function (data) {
+                    var user = data.user;
+                    addTip(user.userName + "加入聊天");
+                });
+
                 $("#webim_message_send_btn").click(function() {
                     doRegxSthAndSend();
                 });
 
                 messageSendDiv.keyup(function(event){
-                    if(event.altKey && event.keyCode == 13){
+                    if(event.ctrlKey && event.keyCode == 13){
                         doRegxSthAndSend();
                     }
                 });
@@ -61,18 +68,18 @@ $(function () {
                 //监听退出
                 socket.on("broadcast_quit_room",function(data) {
                     userLeave(data);
-                    addTip("用户" + data.userName + "离开了");
+                    addTip(data.userName + "离开了");
                 });
 
                 socket.on('broadcast_join_rtc_room', function (data) {
                     if(!webRTC){
                         doInvite(data.msg);
                     }
-                    addTip("用户"+data.user.userName+"进入视频聊天");
+                    addTip(data.user.userName+"进入视频聊天");
                 });
 
                 socket.on('broadcast_quit_rtc_room', function (data) {
-                    addTip("用户"+data.user.userName+"退出了视频聊天");
+                    addTip(data.user.userName+"退出了视频聊天");
                 });
 
                 socket.on("broadcast_invite_rtc_room", function (data) {
@@ -86,24 +93,45 @@ $(function () {
                         webRTC.joinRoom(room);
                         $("#webim-videos").children().first().show();
                     }else{
-                        webRTC = new SimpleWebRTC({
-                            localVideoEl: 'webim-videos',
-                            remoteVideosEl: 'webim-videos',
-                            autoRequestMedia: true
-                        });
-                        webRTC.on('readyToCall', function () {
-                            webRTC.joinRoom(room);
-                        });
-                        webRTC.on("joinedRoom",function(){
+                            if(!getMdiea){
+                                bootbox.alert("当前浏览器不支持视频聊天,建议使用chrome浏览器");
+                                return
+                            }
+                            $(".webim-container").css("width","1340px")
+                            webRTC = new SimpleWebRTC({
+                                localVideoEl: 'webim-videos',
+                                remoteVideosEl: 'webim-videos',
+                                autoRequestMedia: true
+                            });
+                          webRTC.on("joinedRoom",function(){
                             socket.emit("broadcast_join_rtc_room")
-                        })
+                            });
+                            webRTC.on('readyToCall', function () {
+                                webRTC.joinRoom(room);
+                            });
+                        webRTC.on('videoAdded', function(video,peer){
+                            var dc = peer.getDataChannel('nameSuperChannel');
+                            setTimeout(function(){
+                                webRTC.sendDirectlyToAll('nameSuperChannel','setDisplayName', userName);
+                            }, 3000);
+                            })
+                        webRTC.on('channelMessage', function (peer, label, data) {
+                            if (data.type == 'setDisplayName') {
+                                var name = data.payload;
+                               $(peer.videoEl).prev().find(".webim-video-title").text(name);
+                            }});
+                            webRTC.on("localMediaError",function(){
+                                bootbox.alert("当前浏览器不支持视频聊天,建议使用chrome浏览器");
+                            });
                     }
                 });
+/*
 
                 $("#webim_message_img_btn").click(function(){
                     $("#webim_file").trigger("click");
                 });
-
+*/
+/*
                 $("#webim_file").change(function(e){
                     try{
                         for(var i = 0; i < e.target.files.length; i++){
@@ -113,7 +141,7 @@ $(function () {
                         console.log(err)
                         bootbox.alert("该浏览器不支持添加图片功能!");
                     }
-                });
+                });*/
 
                 $("#webim_message_record_btn").click(function(){
                     var pInvite = $(".webim-invite");
@@ -173,30 +201,40 @@ $(function () {
                     console.log(content+"--content");
                     if(!content){
                         bootbox.alert("发送内容不能为空!");
+                    }else if(content.length > 1300){
+                        bootbox.alert("你所发内容字符数为" + content.length + ",超过规定的1300");
                     }else{
                         socket.emit('broadcast_send_text_msg', {content:content,toUserId:toUserId,toUserName:toUserName,toUserType:chatType});
                         addMessage({user:{userPic:userPic,userName:userName},content:content,time:getTimeStr()},true);
+                        messageSendDiv.html("").focus();
                     }
-                    messageSendDiv.html("").focus();
                 }
 
+
+
+
                 toggleVideo = function (arg){
-                    if($(arg).html() == "关闭视频"){
+                    if($(arg).attr("src").indexOf("videoOn") != -1){
+                        $(arg).attr("src","/static/img/videoOff.png");
+                        $(".webim-volum-box img").css("opacity","1");
                         webRTC.pauseVideo();
-                        $(arg).html("开启视频");
                     }else{
+                        $(arg).attr("src","/static/img/videoOn.png");
+                        $(".webim-volum-box img").css("opacity","0");
                         webRTC.resumeVideo();
-                        $(arg).html("关闭视频");
+
                     }
 
                 }
                 toggleAudio =  function (arg) {
-                    if($(arg).html() == "关闭语音"){
+                    if($(arg).attr("src").indexOf("audioOn") != -1){
+                        $(arg).attr("src","/static/img/audioOff.png");
                         webRTC.mute();
-                        $(arg).html("开启语音");
                     }else{
+                        $(arg).attr("src","/static/img/audioOn.png");
                         webRTC.unmute();
-                        $(arg).html("关闭语音");
+
+
                     }
                 }
 
@@ -213,32 +251,34 @@ $(function () {
         });
     }
 
-    function readImg(file){
+/*    function readImg(file){
         var reader = new FileReader();
         reader.onload = function(){
             appendToMessage( reader.result );
         };
         reader.readAsDataURL(file);
-    }
+    }*/
 
     function appendToMessage(url){
-        messageSendDiv.append("<img src='"+url+"' /><br>");
+        messageSendDiv.append('<img src="'+url+'" /><br>');
         messageSendDiv.animate({ scrollTop: 9999 });
     }
-
+    function doRegImg(content){
+        return content.replace(/＜/g,"<").replace(/＞/g, ">").replace(/“/g,"'").replace(/”/g,"'")
+    }
     function addMessage(data, isSelf){
         count+=1;
         if(isSelf){
             var htmlMessageElement = '<div id="msg-'+count+'" class="webim-message-inner-left"><img class="webim-user-head-pic"  src="' +
                 data.user.userPic + '" />' +
-                '<span class="webim-triangle-left"></span><div class="webim-message"><h6> ' + '你' +
-                ' <span class="time">' +data.time+ '</span></h6>' + data.content + '</div></div>';
+                '<div class="webim-message-relative-wrapper"><div class="webim-message-relative"><span class="webim-triangle-left"></span><div class="webim-message"><h6> ' + '你' +
+                ' <span class="time">' +data.time+ '</span></h6>' + data.content + '</div></div></div></div><div class="clearfix"></div>';
             messageInner.append(htmlMessageElement);
             $('#msg-'+count).fadeOut(0).fadeIn(500);
         }else{
             var htmlMessageElement = '<div id="msg-'+count+'" class="webim-message-inner-left"><img class="webim-user-head-pic"  src="' + data.user.userPic + '" />' +
-                '<span class="webim-triangle-left"></span><div class="webim-message"><h6> ' + data.user.userName +
-                ' <span class="time">' +data.time+ '</span></h6>' + data.content + '</div></div>';
+                ' <div class="webim-message-relative-wrapper"><div class="webim-message-relative"><span class="webim-triangle-left"></span><div class="webim-message"><h6> ' + data.user.userName +
+                ' <span class="time">' +data.time+ '</span></h6>' + data.content + '</div></div></div></div><div class="clearfix"></div>';
             messageInner.append(htmlMessageElement);
             $('#msg-'+count).fadeOut(0).fadeIn(500);
         }
@@ -260,15 +300,20 @@ $(function () {
         messageBox.animate({ scrollTop: messageInner.height() },500);
     }
 
-    function getTimeStr(){
-        var time = new Date();
+    function getTimeStr(date){
+        var time = date||new Date();
+        var year = time.getFullYear();
+        var month = time.getMonth()+1;
+        var day = time.getDate();
         var hours = time.getHours();
         var minutes = time.getMinutes();
         var seconds = time.getSeconds();
+        if(month<10) month = "0" + month;
+        if(day<10) day = "0" + day;
         if(hours < 10) hours = '0' + hours;
         if(minutes < 10) minutes = '0' + minutes;
         if(seconds<10)seconds = "0" + seconds;
-        return hours+":"+minutes+":"+seconds;
+        return year + "-"+month+"-"+day+" " +hours+":"+minutes+":"+seconds;
     }
 
     //视频语音邀请弹出
@@ -331,6 +376,7 @@ $(function () {
     function registerAjaxRecord(){
         var pRecordUl = $(".webim-record-ul");
         var openPrivateMsg = {};
+        openPrivateMsg.corpCode = corpCode;
         if(chatType=="user"){
             openPrivateMsg.fromUserId = userId;
             openPrivateMsg.toUserId = toUserId;
@@ -339,19 +385,20 @@ $(function () {
             openPrivateMsg.toUserId=toUserId;
         }
         if($( "#datepicker").prop("value")){
-            openPrivateMsg.createTime=$( "#datepicker").prop("value");
+            openPrivateMsg.createTime=$( "#datepicker").prop("value")+" 00:00:00";
         }
-        var jqxhr = $.post("record", {page: '{pageSize:'+paginationOptions.pageSize+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},"json");
+        var jqxhr = $.post("record", {page: '{sortName:"createTime",sortOrder:"desc",pageSize:'+paginationOptions.pageSize+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},"json");
         jqxhr.success(function(data){
+            console.log(data.rows)
             $(".webim-record-loading").hide()
             $('.pagination').jqPagination({
-                max_page	: data.TotalPages,
+                max_page	: data.totalPages,
                 paged		: function(page) {
                     $(".webim-record-ul").empty();
                     $(".webim-record-loading").show();
-                    var jqxhrInner =  $.post("record", {page: '{pageSize:'+paginationOptions.pageSize+',pageNo:'+page+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},function(data){
+                    var jqxhrInner =  $.post("record", {page: '{sortName:"createTime",sortOrder:"desc",pageSize:'+paginationOptions.pageSize+',pageNo:'+page+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},function(data){
                         $.each(data.rows,function(index, value){
-                            pRecordUl.append('<li><h6>'+value.fromUserName+' <span class="time">'+value.createTime+'</span></h6>'+value.msgContent+'</li>');
+                            pRecordUl.append('<li><h6>'+value.fromUserName+' <span class="time">'+getTimeStr(new Date(value.createTime))+'</span></h6><p>'+doRegImg(value.msgContent)+'</p></li>');
                         });
                         $(".webim-record-loading").hide();
                     },"json");
@@ -362,7 +409,7 @@ $(function () {
                 }
             });
             $.each(data.rows,function(index, value){
-                pRecordUl.append('<li><h6>'+value.fromUserName+' <span class="time">'+value.createTime+'</span></h6>'+value.msgContent+'</li>');
+                pRecordUl.append('<li><h6>'+value.fromUserName+' <span class="time">'+getTimeStr(new Date(value.createTime))+'</span></h6><p>'+doRegImg(value.msgContent)+'</p></li>');
             });
         });
         jqxhr.error(function(){
@@ -381,34 +428,18 @@ $(function () {
     StringBuffer.prototype.toString = function() {
         return this._strs.join("");
     };
-
+    $('#webim_message_img_btn').uploadify({
+        'auto':true,
+        'swf'      : '/static/javascripts/uploadify.swf',
+        'uploader' : 'http://www.test2.net/sf-server/file/uploadFile?responseFormat=text/plain&processor=image&corpCode=20140605&system=true',
+        'onUploadSuccess' : function ( file, data, response ) {
+            data = jQuery.parseJSON(data);
+            appendToMessage(data.signedUrl);
+        },
+        buttonClass:"btn  btn-small btn-primary",
+        buttonText:"添加图片",
+        width:70,
+        height:25,
+        fileTypeExts : "*.gif; *.jpg; *.png"
+    });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

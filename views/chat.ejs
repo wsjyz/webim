@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>chat</title>
     <meta charset="UTF-8"/>
+    <title>在线视频聊天</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--<link rel="stylesheet" href="/static/stylesheets/uploadify.css"/>-->
     <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css"/>
     <link rel="stylesheet" href="/static/stylesheets/jquery-ui.min.css"/>
     <link rel="stylesheet" href="/static/stylesheets/jqpagination.css"/>
@@ -17,11 +18,11 @@
     <input type="hidden" id="toUserId" value="<%=toUserId%>"/>
     <input type="hidden" id="toUserName" value="<%=toUserName%>"/>
     <input type="hidden" id="room" value="<%=room%>"/>
-
-<div class="webim-container" style="margin-top: 10px;">
-    <div class="row">
+    <input type="hidden" id="corpCode" value="<%=corpCode%>"/>
+    <div class="webim-container">
+       <div class="row">
         <!--左边视频展示区 -->
-        <div class="span4">
+        <div class="span5">
             <div  id="webim-videos" class="webim-video-display">
 
             </div>
@@ -34,21 +35,18 @@
                 </div>
             </div>
             <div class="webim-control-bar">
-                <button type="button" class="btn  btn-small btn-primary" id="webim_message_video_btn">进入视频聊天</button>
-                <button type="button" class="btn  btn-small btn-primary" id="webim_message_img_btn">添加 图片</button>
+                <button type="button" class="btn  btn-small btn-primary" id="webim_message_video_btn">视频聊天</button>
+                <button type="button" class="btn  btn-small btn-primary " id="webim_message_img_btn">添加图片</button>
                 <button type="button" class="btn  btn-small btn-primary" id="webim_message_record_btn">聊天记录</button>
-                <form action="" method="post" enctype="multipart/form-data" style="display:none;">
-                       <input type="file" name="webim_file" id="webim_file" accept="image/gif, image/jpeg,image/png" multiple="true"/>
-                </form>
             </div>
             <div class="webim-message-send-box">
                 <div class="webim-message-send-div" contenteditable="true"></div>
                 <div class="webim-message-send-bar">
                    <div class="webim-message-send-btn-group btn-group dropup">
-                       <button class="btn btn-small btn-success webim-message-send-btn" id="webim_message_send_btn">发送</button>
+                       <button class="btn btn-small btn-success webim-message-send-btn" id="webim_message_send_btn">发&nbsp;&nbsp;送</button>
                        <button class="btn btn-small btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                        <ul class="dropdown-menu">
-                           <li> 按Alt+Enter键发送消息 </li>
+                           <li>&nbsp;&nbsp;按Ctrl+Enter键发送消息&nbsp;&nbsp;</li>
                        </ul>
                    </div>
                 </div>
@@ -65,8 +63,8 @@
                 <ul class="webim-online-users">
                 </ul>
             </div>
-            <img src="/static/img/loading.gif" class="webim-record-loading"/>
             <div class="webim-record-box">
+                <img src="/static/img/loading.gif" class="webim-record-loading"/>
                 <div class="webim-title-bar"><i class="icon-comment"></i> 聊天记录</div>
                 <ul class="webim-record-ul">
                 </ul>
@@ -74,13 +72,11 @@
                    <div style="display: inline-block"> <span style="display: inline-block;position: relative;top: -6px;">日期: </span><input type="text" id="datepicker" readonly="readonly"></div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>
-</body>
 <script src="/static/javascripts/jquery-1.7.min.js"></script>
+<script src="/static/javascripts/jquery.uploadify.min.js"></script>
 <script src="/static/javascripts/jquery-ui.min.js"></script>
 <script src="/static/javascripts/jquery.jqpagination.min.js"></script>
 <script src="/static/javascripts/simplewebrtc.bundle.js"></script>
@@ -88,12 +84,5 @@
 <script src="/static/javascripts/bootstrap.min.js"></script>
 <script src="/static/javascripts/bootbox.min.js"></script>
 <script src="/static/javascripts/chat.client.js"></script>
-<script>
-
-    $(function () {
-
-    })
-
-
-</script>
+</body>
 </html>
