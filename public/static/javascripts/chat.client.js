@@ -216,7 +216,9 @@ $(function () {
                 toggleVideo = function (arg){
                     if($(arg).attr("src").indexOf("videoOn") != -1){
                         $(arg).attr("src","/static/img/videoOff.png");
-                        $(".webim-volum-box img").css("opacity","1");
+                        if($(arg).next().attr("src") != "/static/img/audioOff.png"){
+                            $(".webim-volum-box img").css("opacity","1");
+                        }
                         webRTC.pauseVideo();
                     }else{
                         $(arg).attr("src","/static/img/videoOn.png");
@@ -228,9 +230,15 @@ $(function () {
                 }
                 toggleAudio =  function (arg) {
                     if($(arg).attr("src").indexOf("audioOn") != -1){
+                        if($(".webim-volum-box img").css("opacity") == "1"){
+                            $(".webim-volum-box img").css("opacity","0");
+                        }
                         $(arg).attr("src","/static/img/audioOff.png");
                         webRTC.mute();
                     }else{
+                        if($(arg).prev().attr("src") == "/static/img/videoOff.png"){
+                            $(".webim-volum-box img").css("opacity","1");
+                        }
                         $(arg).attr("src","/static/img/audioOn.png");
                         webRTC.unmute();
 
@@ -288,6 +296,7 @@ $(function () {
     function userLeave(data){
         $("#"+data.userId).slideUp(500,function() {
             $(this).remove();
+
         });
 
     }
@@ -393,6 +402,7 @@ $(function () {
             $(".webim-record-loading").hide()
             $('.pagination').jqPagination({
                 max_page	: data.totalPages,
+                page_string:"{current_page}/{max_page}",
                 paged		: function(page) {
                     $(".webim-record-ul").empty();
                     $(".webim-record-loading").show();
@@ -431,7 +441,7 @@ $(function () {
     $('#webim_message_img_btn').uploadify({
         'auto':true,
         'swf'      : '/static/javascripts/uploadify.swf',
-        'uploader' : 'http://www.test2.net/sf-server/file/uploadFile?responseFormat=text/plain&processor=image&corpCode=20140605&system=true',
+        'uploader' : 'http://www.test3.net/sf-server/file/uploadFile?responseFormat=text/plain&processor=image&corpCode=20140605&system=true',
         'onUploadSuccess' : function ( file, data, response ) {
             data = jQuery.parseJSON(data);
             appendToMessage(data.signedUrl);

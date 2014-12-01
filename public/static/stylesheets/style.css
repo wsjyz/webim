@@ -125,6 +125,10 @@ video{width: 100%;
 .webim-message-send-div:focus{
     border-color: #34495e;
 }
+.webim-message-send-div[placeholder]:empty:before{
+    content: attr(placeholder);
+    color: #999;
+}
 .webim-middle {
     background: #fafafa;
     border-radius: 6px;
@@ -298,8 +302,7 @@ video{width: 100%;
     top:0;
     z-index: 9998;
     opacity: 0;
-    transition: opacity 1s;
-    -moz-transition: opacity 1s;
-    -webkit-transition: opacity 1s;
-    -o-transition: opacity 1s;
+}
+.webim-record-ul img, .webim-message img{
+    width: 100%;
 }

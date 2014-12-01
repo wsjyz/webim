@@ -100,7 +100,12 @@ router.post("/record", function (req, res) {
             str += chunk.toString();
         })
         postRes.on("end",function(){
-            res.send(JSON.parse(str));
+            if(postRes.statusCode == 200){
+                 res.send(JSON.parse(str));
+            }else{
+                res.statusCode(postRes.statusCode);
+                res.end();
+            }
         });
     });
     postReq.on("error", function(error){

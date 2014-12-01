@@ -2,9 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" >
     <title>在线视频聊天</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!--<link rel="stylesheet" href="/static/stylesheets/uploadify.css"/>-->
     <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css"/>
     <link rel="stylesheet" href="/static/stylesheets/jquery-ui.min.css"/>
     <link rel="stylesheet" href="/static/stylesheets/jqpagination.css"/>
@@ -40,7 +39,7 @@
                 <button type="button" class="btn  btn-small btn-primary" id="webim_message_record_btn">聊天记录</button>
             </div>
             <div class="webim-message-send-box">
-                <div class="webim-message-send-div" contenteditable="true"></div>
+                <div class="webim-message-send-div" contenteditable="true" placeholder="请输入消息..."></div>
                 <div class="webim-message-send-bar">
                    <div class="webim-message-send-btn-group btn-group dropup">
                        <button class="btn btn-small btn-success webim-message-send-btn" id="webim_message_send_btn">发&nbsp;&nbsp;送</button>
@@ -78,6 +77,7 @@
 <script src="/static/javascripts/jquery-1.7.min.js"></script>
 <script src="/static/javascripts/jquery.uploadify.min.js"></script>
 <script src="/static/javascripts/jquery-ui.min.js"></script>
+<script src="/static/javascripts/jquery.ui.datepicker-zh-CN.js"></script>
 <script src="/static/javascripts/jquery.jqpagination.min.js"></script>
 <script src="/static/javascripts/simplewebrtc.bundle.js"></script>
 <script src="/socket.io/socket.io.js"></script>
