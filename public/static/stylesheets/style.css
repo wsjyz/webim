@@ -10,10 +10,6 @@ body{
 }
 video{width: 100%;
  }
-.span5{
-    width: auto;
-    max-width: 380px;
-}
 .webim-video-box {
     float: left;
     background: #fafafa;
@@ -58,10 +54,14 @@ video{width: 100%;
     clear: both;
 }
 .webim-container {
-    width: 800px;
+    width: 1340px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;
+    transition: width 2s;
+    -moz-transition: width 2s;
+    -webkit-transition: width 2s;
+    -o-transition: width 2s;
 }
 
 .webim-title-bar {
@@ -89,7 +89,7 @@ video{width: 100%;
     border-bottom: 1px solid #CDCDCD;
 }
 .webim-message-box-innner{
-    float: left;
+    /*float: left;*/
 }
 .webim-control-bar{
     height: 26px;
@@ -178,6 +178,44 @@ video{width: 100%;
     background: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e5e5e5), color-stop(0.1, #f3f3f3), color-stop(0.3, #f1f1f1), color-stop(0.5, #ececec), color-stop(0.7, #e9e9e9), color-stop(0.9, #e6e6e6), color-stop(1, #e5e5e5));
     background-image: -moz-linear-gradient(top, #f3f3f3 10%, #f1f1f1 30%, #ececec 50%, #e9e9e9 70%, #e6e6e6 90%, #e5e5e5 100%);
 }
+
+.webim-message-inner-right{
+    float: right;
+    margin-top: 15px;
+}
+.webim-message-inner-right .webim-user-head-pic{
+    display: inline-block;
+    float: right;
+    vertical-align: middle;
+    width: 28px;
+    height: 28px;
+    margin-top: 6px;
+    margin-right: 6px;
+    border-radius: 50%;
+}
+.webim-message-inner-right .webim-message-relative-wrapper{
+    float: right;
+    margin-right: 12px;
+}
+.webim-message-inner-right .webim-message-relative{
+    position: relative;
+}
+
+.webim-message-inner-right .webim-message{
+    border: 1px solid #7AA23F;
+    box-shadow: 0px 1px 0px #D5D5D5;
+    min-width: 155px;
+    max-width: 451px;
+    word-wrap : break-word;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #B2CF73;
+    background: -webkit-gradient(linear, left top, left bottom, from(#cdeb96), to(#a4c363), color-stop(0.1, #b4d174), color-stop(0.3, #b2cf73), color-stop(0.5, #afcc74), color-stop(0.7, #abca6c), color-stop(0.9, #a9c572), color-stop(1, #a4c363));
+    background-image: -moz-linear-gradient(top, #b4d174 10%, #b2cf73 30%, #afcc74 50%, #abca6c 70%, #a9c572 90%, #a4c363 100%);
+}
+.webim-message-inner-right h6{
+    text-align: right;
+}
 .webim-message-inner-left .webim-message-tip {
     margin-left: 46px;
     width: 451px;
@@ -187,6 +225,7 @@ video{width: 100%;
     border-radius: 6px;
     padding: 10px;
     text-align: center;
+    border: 1px solid #AFAFAF;
 }
 .webim-message-inner-left .webim-triangle-left {
     position: absolute;
@@ -196,10 +235,16 @@ video{width: 100%;
     background: url("../img/bubble.png");
     width: 10px;
     height: 14px;
+}.webim-message-inner-right .webim-triangle-right {
+    position: absolute;
+    right: -9px;
+    margin-top: 14px;
+    display: inline-block;
+    background: url("../img/bubble_green_guid1dbc46.png") no-repeat;
+    width: 10px;
+    height: 14px;
 }
-.webim-message-inner-right{
-    float: right;
-}
+
 
 .webim-online-users {
     list-style: none;

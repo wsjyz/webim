@@ -97,7 +97,6 @@ $(function () {
                                 bootbox.alert("当前浏览器不支持视频聊天,建议使用chrome浏览器");
                                 return
                             }
-                            $(".webim-container").css("width","1340px")
                             webRTC = new SimpleWebRTC({
                                 localVideoEl: 'webim-videos',
                                 remoteVideosEl: 'webim-videos',
@@ -120,9 +119,9 @@ $(function () {
                                 var name = data.payload;
                                $(peer.videoEl).prev().find(".webim-video-title").text(name);
                             }});
-                            webRTC.on("localMediaError",function(){
+                       /*     webRTC.on("localMediaError",function(){
                                 bootbox.alert("当前浏览器不支持视频聊天,建议使用chrome浏览器");
-                            });
+                            });*/
                     }
                 });
 /*
@@ -277,9 +276,9 @@ $(function () {
     function addMessage(data, isSelf){
         count+=1;
         if(isSelf){
-            var htmlMessageElement = '<div id="msg-'+count+'" class="webim-message-inner-left"><img class="webim-user-head-pic"  src="' +
+            var htmlMessageElement = '<div id="msg-'+count+'" class="webim-message-inner-right"><img class="webim-user-head-pic"  src="' +
                 data.user.userPic + '" />' +
-                '<div class="webim-message-relative-wrapper"><div class="webim-message-relative"><span class="webim-triangle-left"></span><div class="webim-message"><h6> ' + '你' +
+                '<div class="webim-message-relative-wrapper"><div class="webim-message-relative"><span class="webim-triangle-right"></span><div class="webim-message"><h6> ' + '你' +
                 ' <span class="time">' +data.time+ '</span></h6>' + data.content + '</div></div></div></div><div class="clearfix"></div>';
             messageInner.append(htmlMessageElement);
             $('#msg-'+count).fadeOut(0).fadeIn(500);
