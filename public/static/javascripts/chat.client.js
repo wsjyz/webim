@@ -203,7 +203,7 @@ $(function () {
                     }else if(content.length > 1300){
                         bootbox.alert("你所发内容字符数为" + content.length + ",超过规定的1300");
                     }else{
-                        socket.emit('broadcast_send_text_msg', {content:content,toUserId:toUserId,toUserName:toUserName,toUserType:chatType});
+                        socket.emit('broadcast_send_text_msg', {content:content,toUserId:toUserId,toUserName:toUserName,toUserType:chatType,corpCode:corpCode});
                         addMessage({user:{userPic:userPic,userName:userName},content:content,time:getTimeStr()},true);
                         messageSendDiv.html("").focus();
                     }
@@ -440,7 +440,7 @@ $(function () {
     $('#webim_message_img_btn').uploadify({
         'auto':true,
         'swf'      : '/static/javascripts/uploadify.swf',
-        'uploader' : 'http://www.test3.net/sf-server/file/uploadFile?responseFormat=text/plain&processor=image&corpCode=20140605&system=true',
+        'uploader' : 'http://www.test3.net/sf-server/file/uploadFile?responseFormat=text/plain&processor=image&corpCode='+corpCode+'&system=true',
         'onUploadSuccess' : function ( file, data, response ) {
             data = jQuery.parseJSON(data);
             appendToMessage(data.signedUrl);
