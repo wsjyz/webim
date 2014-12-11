@@ -96,7 +96,6 @@ router.post("/record", function (req, res) {
     postReq.on("response", function(postRes){
         var str = "";
         postRes.on("data",function(chunk){
-            console.log(chunk.toString())
             str += chunk.toString();
         })
         postRes.on("end",function(){
@@ -111,7 +110,6 @@ router.post("/record", function (req, res) {
     postReq.on("error", function(error){
         console.log(error);
     })
-    console.log(qs.stringify(arg));
     postReq.write(qs.stringify(arg));
     postReq.end();
 

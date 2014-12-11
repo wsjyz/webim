@@ -27,7 +27,7 @@ $(function () {
     joinRoom(userId, userName, room,userPic);
 
     function joinRoom(userId, userName, room,userPic) {
-        socket = io('http://192.168.1.9:3002/');
+        socket = io('http://webim.21tb.com/');
         socket.on("connection_quit", function (data) {
             if(data.quit) {
                 bootbox.alert(data.msg);
@@ -197,7 +197,6 @@ $(function () {
                     var content = messageSendDiv.html();
                     content = content.replace(/<(?!img)[\s\S]*?>/ig," ");
                     content = $.trim(content);
-                    console.log(content+"--content");
                     if(!content){
                         bootbox.alert("发送内容不能为空!");
                     }else if(content.length > 1300){
@@ -397,7 +396,6 @@ $(function () {
         }
         var jqxhr = $.post("record", {page: '{sortName:"createTime",sortOrder:"desc",pageSize:'+paginationOptions.pageSize+'}', openPrivateMsg: JSON.stringify(openPrivateMsg)},"json");
         jqxhr.success(function(data){
-            console.log(data.rows)
             $(".webim-record-loading").hide()
             $('.pagination').jqPagination({
                 max_page	: data.totalPages,

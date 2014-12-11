@@ -93,7 +93,7 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-            url: 'http://192.168.1.9:5030',
+            url: 'http://webim.21tb.com:5030',
             socketio: { 'force new connection':true},
             debug: false,
             localVideoEl: '',
