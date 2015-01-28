@@ -343,8 +343,8 @@ SimpleWebRTC.prototype.handlePeerStreamAdded = function (peer) {
     peer.videoEl = video;
     video.id = this.getDomId(peer);
 
-    if (container) {
-        var videoWrapper = $('<div class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title"></span> </div> </div>');
+    if (container && $('#'+video.id).length <= 0 ) {
+        var videoWrapper = $('<div id="'+video.id+'" class="webim-video-box"> <div class="webim-video-title-bar"><span class="webim-video-title"></span> </div> </div>');
         videoWrapper.append(video);
         $(container).append(videoWrapper);
     }

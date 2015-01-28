@@ -125,10 +125,10 @@ video{width: 100%;
 .webim-message-send-div:focus{
     border-color: #34495e;
 }
-.webim-message-send-div[placeholder]:empty:before{
-    content: attr(placeholder);
-    color: #999;
-}
+/*.webim-message-send-div[placeholder]:empty:before{*/
+    /*content: attr(placeholder);*/
+    /*color: #999;*/
+/*}*/
 .webim-middle {
     background: #fafafa;
     border-radius: 6px;

@@ -91,6 +91,7 @@ router.post("/record", function (req, res) {
     arg.appKey_ =settings.appKey;
     arg.sign_ = settings.record_sign;
     arg.timestamp_ = new Date().getTime();
+    arg.corpCode = req.cookies.corp_code;
     var postReq = http.request(options);
     postReq.setHeader("Content-Type", "text/html");
     postReq.on("response", function(postRes){

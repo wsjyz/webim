@@ -59,6 +59,8 @@ $(function () {
                     if(event.ctrlKey && event.keyCode == 13){
                         doRegxSthAndSend();
                     }
+                }).click(function(){
+                    this.focus();
                 });
 
                 //监听聊天的消息接收
@@ -85,44 +87,54 @@ $(function () {
                 socket.on("broadcast_invite_rtc_room", function (data) {
                     doInvite(data.msg);
                 });
+                socket.on("select_current_video", function (data) {
+                    if(data.canJoin){
 
-                $("#webim_message_video_btn").click(function(){
-                    $(this).attr("disabled", true);
-                    doCloseInvite();
-                    if(webRTC){
-                        webRTC.joinRoom(room);
-                        $("#webim-videos").children().first().show();
-                    }else{
-                            if(!getMdiea){
-                                bootbox.alert("当前浏览器不支持视频聊天,建议使用chrome浏览器");
-                                return
-                            }
+                        if(webRTC){
+                            webRTC.joinRoom(room);
+                            $("#webim-videos").children().first().show();
+                        }else{
+
                             webRTC = new SimpleWebRTC({
                                 localVideoEl: 'webim-videos',
                                 remoteVideosEl: 'webim-videos',
                                 autoRequestMedia: true
                             });
-                          webRTC.on("joinedRoom",function(){
-                            socket.emit("broadcast_join_rtc_room")
+                            webRTC.on("joinedRoom",function(){
+                                socket.emit("broadcast_join_rtc_room")
                             });
                             webRTC.on('readyToCall', function () {
                                 webRTC.joinRoom(room);
                             });
-                        webRTC.on('videoAdded', function(video,peer){
-                            var dc = peer.getDataChannel('nameSuperChannel');
-                            setTimeout(function(){
-                                webRTC.sendDirectlyToAll('nameSuperChannel','setDisplayName', userName);
-                            }, 3000);
+                            webRTC.on('videoAdded', function(video,peer){
+                                var dc = peer.getDataChannel('nameSuperChannel');
+                                setTimeout(function(){
+                                    webRTC.sendDirectlyToAll('nameSuperChannel','setDisplayName', userName);
+                                }, 3000);
                             })
-                        webRTC.on('channelMessage', function (peer, label, data) {
-                            if (data.type == 'setDisplayName') {
-                                var name = data.payload;
-                               $(peer.videoEl).prev().find(".webim-video-title").text(name);
+                            webRTC.on('channelMessage', function (peer, label, data) {
+                                if (data.type == 'setDisplayName') {
+                                    var name = data.payload;
+                                    $(peer.videoEl).prev().find(".webim-video-title").text(name);
                             }});
-                       /*     webRTC.on("localMediaError",function(){
-                                bootbox.alert("当前浏览器不支持视频聊天,建议使用chrome浏览器");
-                            });*/
+
+                        }
+
+                    }else{
+                        bootbox.alert(data.msg);
                     }
+                });
+
+                $("#webim_message_video_btn").click(function(){
+                    $(this).attr("disabled", true);
+                    doCloseInvite();
+                    if(!getMdiea){
+                        bootbox.alert("当前浏览器不支持视频聊天,建议使用谷歌、火狐、遨游浏览器");
+                        return;
+                    }
+                    socket.emit("select_current_video");
+
+
                 });
 /*
 
@@ -204,7 +216,8 @@ $(function () {
                     }else{
                         socket.emit('broadcast_send_text_msg', {content:content,toUserId:toUserId,toUserName:toUserName,toUserType:chatType,corpCode:corpCode});
                         addMessage({user:{userPic:userPic,userName:userName},content:content,time:getTimeStr()},true);
-                        messageSendDiv.html("").focus();
+                        messageSendDiv.html("");
+                        messageSendDiv[0].focus();
                     }
                 }
 
@@ -277,7 +290,7 @@ $(function () {
         if(isSelf){
             var htmlMessageElement = '<div id="msg-'+count+'" class="webim-message-inner-right"><img class="webim-user-head-pic"  src="' +
                 data.user.userPic + '" />' +
-                '<div class="webim-message-relative-wrapper"><div class="webim-message-relative"><span class="webim-triangle-right"></span><div class="webim-message"><h6> ' + '你' +
+                '<div class="webim-message-relative-wrapper"><div class="webim-message-relative"><span class="webim-triangle-right"></span><div class="webim-message"><h6> ' + '我' +
                 ' <span class="time">' +data.time+ '</span></h6>' + data.content + '</div></div></div></div><div class="clearfix"></div>';
             messageInner.append(htmlMessageElement);
             $('#msg-'+count).fadeOut(0).fadeIn(500);
